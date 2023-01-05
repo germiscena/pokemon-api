@@ -9,7 +9,6 @@ import wild from '../img/wild.svg';
 import { Link } from 'react-router-dom';
 
 const MainComponent = ({ children }) => {
-  console.log(children);
   return (
     <div className='main'>
       <div className='main_header'>
