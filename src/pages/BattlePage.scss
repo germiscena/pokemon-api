@@ -1,0 +1,194 @@
+.battle {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &_information {
+    margin: 0px 130px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    &_pokemon {
+      margin-top: 70px;
+      width: 248px;
+      height: 248px;
+      border-radius: 10px;
+      background-color: white;
+      border: 1px solid #d9d9d9;
+
+      &_props {
+        display: flex;
+        flex-direction: row;
+
+        &_name {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 20px;
+          margin: 5px 10px 10px;
+        }
+        &_level {
+          margin: 5px 0px 0px 10px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 20px;
+        }
+      }
+
+      &_image {
+        margin-left: 45px;
+        margin-top: 10px;
+        width: 150px;
+        height: 150px;
+      }
+      &_health {
+        margin: 0px 10px 10px;
+        height: 10px;
+        border: 1px solid #d9d9d9;
+        border-radius: 10px;
+      }
+      &_experience {
+        margin: 0px 10px;
+        height: 7px;
+        border: 1px solid #d9d9d9;
+        border-radius: 10px;
+      }
+    }
+    &_center {
+      width: 694px;
+      height: 376px;
+      background-color: white;
+      border-radius: 10px;
+      border: 1px solid #9b9b9b;
+      margin: 0px 30px;
+      &_round {
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        &_number {
+          width: 124px;
+          height: 30px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 400;
+          font-size: 15px;
+          margin: 0px 280px;
+          padding-top: 3px;
+          border: 1px solid #9b9b9b;
+          border-top: none;
+          border-bottom: none;
+        }
+      }
+      &_turn {
+        height: 94px;
+        border-top: 1px solid #9b9b9b;
+        border-bottom: 1px solid #9b9b9b;
+        padding: 9px 11px;
+
+        &_attack {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 5px;
+
+          &_pokemon {
+            display: flex;
+            flex-direction: row;
+
+            &_image {
+              width: 20px;
+              height: 20px;
+            }
+
+            &_info {
+              font-family: 'Montserrat';
+              font-weight: 400;
+              font-size: 13px;
+              text-align: center;
+              text-decoration-line: underline;
+              margin: 3px 0px 0px 0px;
+            }
+          }
+          &_properties {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 9px;
+            margin: 0px 0px 0px 5px;
+          }
+        }
+      }
+      &_firstTurn {
+        display: flex;
+        flex-direction: column;
+        padding: 5px 11px;
+
+        &_start {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+  &_attacks {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    width: 100%;
+    justify-content: space-evenly;
+    &_attack {
+      display: flex;
+      flex-direction: row;
+      width: 250px;
+      height: 50px;
+      border-radius: 12px;
+      border: 1px solid #d9d9d9;
+      background-color: white;
+
+      &_type {
+        width: 42px;
+        height: 42px;
+        margin: 3px 9px 0px 9px;
+      }
+
+      &_info {
+        display: flex;
+        flex-direction: column;
+        &_name {
+          margin: 0;
+          margin-top: 5px;
+          margin-right: 30px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 500;
+          font-size: 12px;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  &_buttons {
+    width: 360px;
+    height: 70px;
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    padding: 15px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    &_button {
+      height: 42px;
+      width: 52px;
+      background-color: #c2d6f3;
+      border-radius: 12px;
+      text-align: center;
+      padding-top: 4px;
+
+      &_image {
+        width: 31px;
+        height: 32px;
+      }
+    }
+  }
+}

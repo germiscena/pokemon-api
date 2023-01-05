@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'qore';
+  src: url('../qore.otf');
+}
+.mainPage {
+  margin: 0px 103px 0 103px;
+
+  &_landscape {
+    border: 1px solid white;
+    border-radius: 50px;
+    background: url('../img/landscape.png');
+    height: 320px;
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: 98px;
+    width: 1114px;
+    margin-bottom: 30px;
+  }
+  &_links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    &_route {
+      display: flex;
+      flex-direction: column;
+
+      &_title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 35px;
+        margin-top: 0px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      &_points {
+        height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        &_single {
+          width: 248px;
+          height: 46px;
+          border-radius: 20px;
+          border: none;
+          font-size: 15px;
+          font-family: 'Montserrat', sans-serif;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
