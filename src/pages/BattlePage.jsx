@@ -72,6 +72,26 @@ const BattlePage = () => {
     }
   }, [myHp, enemyHp]);
 
+  async function clearBattle(num) {
+    for (let i = 1; i <= num; ) {
+      await axios.delete(`https://635b02f16f97ae73a63b8527.mockapi.io/turns/${i}`);
+      i = i + 1;
+    }
+    for (let i = 2; i <= num + 1; ) {
+      await axios.delete(`https://635b02f16f97ae73a63b8527.mockapi.io/battle/${i}`);
+      i = i + 1;
+    }
+  }
+
+  async function restartBattle(num) {
+    await clearBattle(num);
+    setMyHp(100);
+    setEnemyHp(100);
+    setRound(0);
+    fetchTurns();
+    fetchBattle();
+  }
+
   React.useEffect(() => {
     fetchBattle();
     fetchTurns();
@@ -90,7 +110,7 @@ const BattlePage = () => {
               />
               <div className='battle_information_pokemon_props'>
                 <p className='battle_information_pokemon_props_name'>
-                  # {battle[0].id} {battle[0].name}
+                  # {battle[0].myId} {battle[0].name}
                 </p>
                 <p className='battle_information_pokemon_props_level'>39</p>
               </div>
@@ -280,8 +300,13 @@ const BattlePage = () => {
                 })}
           </div>
           <div className='battle_buttons'>
-            <div className='battle_buttons_button'>
-              <img className='battle_buttons_button_image' src={reload} alt='reload' />
+            <div className='battle_buttons_button' style={{ cursor: "pointer" }}>
+              <img
+                className='battle_buttons_button_image'
+                onClick={() => restartBattle(turn.length)}
+                src={reload}
+                alt='reload'
+              />
             </div>
             <div className='battle_buttons_button'>
               <img className='battle_buttons_button_image' src={backpack} alt='backpack' />
