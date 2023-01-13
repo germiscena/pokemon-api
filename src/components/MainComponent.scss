@@ -1,11 +1,12 @@
 @font-face {
-  font-family: 'qore';
-  src: url('../qore.otf');
+  font-family: "qore";
+  src: url("../qore.otf");
 }
 
 .main {
   width: 100%;
-  min-height: 721px;
+  // min-height: 721px;
+  min-height: 100vh;
   background-color: #fbe351;
 
   &_header {
@@ -14,7 +15,7 @@
     &_title {
       margin: 0px;
       font-size: 80px;
-      font-family: 'qore';
+      font-family: "qore";
       text-align: center;
     }
   }

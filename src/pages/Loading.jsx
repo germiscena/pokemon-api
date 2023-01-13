@@ -1,13 +1,13 @@
-import React from 'react';
-import './Loading.scss';
-import logo from '../logo.svg';
-import { useNavigate } from 'react-router';
+import React from "react";
+import "./Loading.scss";
+import logo from "../logo.svg";
+import { useNavigate } from "react-router";
 
 const Loading = () => {
   const navigate = useNavigate();
   React.useEffect(() => {
     setTimeout(() => {
-      navigate('/main');
+      navigate("/reg");
     }, 3000);
   }, []);
   return (
