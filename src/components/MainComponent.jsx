@@ -7,9 +7,14 @@ import backpack from "../img/business_center.svg";
 import pets from "../img/pets.svg";
 import wild from "../img/wild.svg";
 import { Link, useLocation } from "react-router-dom";
+import AppContext from "../context";
+import Pokedex from "./Pokedex";
 
 const MainComponent = ({ children }) => {
   const location = useLocation();
+  const { pokedexOpen, setPokedexOpen } = React.useContext(AppContext);
+  console.log("POKEDEX", pokedexOpen);
+
   return (
     <div className='main'>
       <div className='main_header'>
@@ -26,7 +31,12 @@ const MainComponent = ({ children }) => {
             <Link to='/main'>
               <img className='main_borders_image' src={wild} alt='wild pokemons' />
             </Link>
-            <img className='main_borders_image' src={pokedex} alt='pokedex' />
+            <img
+              onClick={() => setPokedexOpen(true)}
+              className='main_borders_image'
+              src={pokedex}
+              alt='pokedex'
+            />
             <Link to='/battle'>
               <img className='main_borders_image' src={battles} alt='battles' />
             </Link>
@@ -34,6 +44,7 @@ const MainComponent = ({ children }) => {
         </div>
       )}
       {children}
+      {pokedexOpen && <Pokedex setClose={() => setPokedexOpen(false)} />}
     </div>
   );
 };

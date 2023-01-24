@@ -1,0 +1,189 @@
+.pokedex {
+  width: 572px;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  border: 1px solid #3c3c3c;
+  border-top: none;
+  &_find {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    &_button {
+      height: 30px;
+      margin: 0px 10px;
+    }
+    &_input {
+      border: 2px solid #9b9b9b;
+      outline: none;
+      border-radius: 10px;
+      height: 35px;
+      width: 100%;
+      background-color: white;
+      padding-left: 10px;
+
+      &:focus {
+        color: #9b9b9b;
+      }
+    }
+    ::-webkit-input-placeholder {
+      color: #9b9b9b;
+    }
+  }
+  &_pokemon {
+    display: flex;
+    flex-direction: row;
+    height: 250px;
+    &_image {
+      margin-right: 10px;
+      &_view {
+        width: 200px;
+        height: 200px;
+        margin: 10px;
+        padding: 5px;
+        border: 2px solid #9b9b9b;
+        border-radius: 5px;
+      }
+      &_type {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        border-radius: 50%;
+        &.first {
+          left: 140px;
+          top: 270px;
+        }
+        &.second {
+          left: 170px;
+          top: 270px;
+        }
+      }
+    }
+    &_info {
+      width: 100%;
+      margin-right: 10px;
+      &_name {
+        font-size: 25px;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+        line-height: 0;
+        font-weight: 500;
+        text-align: center;
+        color: #9b9b9b;
+      }
+
+      &_stats {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+
+        &_single {
+          width: 50px;
+          height: 70px;
+          text-align: center;
+          background-color: #9b9b9b;
+          border-radius: 50px;
+          margin: 10px 0px;
+          &_icon {
+            width: 30px;
+            height: 30px;
+            margin-top: 5px;
+            padding: 3px;
+          }
+          &_number {
+            margin: 0;
+            color: white;
+          }
+        }
+      }
+      &_description {
+        width: 100%;
+        font-size: 16px;
+        line-height: 20px;
+        color: #9b9b9b;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+      }
+    }
+  }
+  &_evolutions {
+    background-color: #f6f2f2;
+    height: 170px;
+
+    &_title {
+      width: 188px;
+      margin-left: auto;
+      background-color: #d9d9d9;
+      position: absolute;
+      right: 0;
+      top: 325px;
+
+      &_wrd {
+        margin: 0;
+        height: 20px;
+        font-size: 14px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 500;
+        text-align: center;
+        color: black;
+      }
+    }
+    &_block {
+      margin-top: 20px;
+      height: 170px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      &_arrow {
+        width: 20px;
+        height: 20px;
+        margin-top: 17px;
+      }
+
+      &_evo {
+        height: 50px;
+        margin: 0px 6px;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        border: 2px solid #9b9b9b;
+        border-radius: 20px;
+        margin-top: 10px;
+
+        &_name {
+          margin-right: 10px;
+          font-size: 16px;
+          font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+          color: #9b9b9b;
+          font-weight: 600;
+        }
+        &_pic {
+          width: 40px;
+          height: 40px;
+          margin: 0px 3px;
+        }
+      }
+    }
+  }
+  &_close {
+    width: 100%;
+    height: 30px;
+    background-color: #3c3c3c;
+    border-color: #3c3c3c;
+    color: #3c3c3c;
+    text-align: center;
+    &_btn {
+      width: 40px;
+      margin-top: 6px;
+    }
+  }
+}

@@ -5,19 +5,21 @@ import Loading from "./pages/Loading.jsx";
 import "./App.css";
 import MainPage from "./pages/MainPage.jsx";
 import BattlePage from "./pages/BattlePage.jsx";
-import axios from "axios";
 import Registration from "./pages/Registration.jsx";
-
+import AppContext from "./context.js";
 function App() {
+  const [pokedexOpen, setPokedexOpen] = React.useState(false);
   return (
-    <MainComponent>
-      <Routes>
-        <Route path='/' element={<Loading />} />
-        <Route path='/main' element={<MainPage />} />
-        <Route path='/battle' element={<BattlePage />} />
-        <Route path='/reg' element={<Registration />} />
-      </Routes>
-    </MainComponent>
+    <AppContext.Provider value={{ pokedexOpen, setPokedexOpen }}>
+      <MainComponent>
+        <Routes>
+          <Route path='/' element={<Loading />} />
+          <Route path='/main' element={<MainPage />} />
+          <Route path='/battle' element={<BattlePage />} />
+          <Route path='/reg' element={<Registration />} />
+        </Routes>
+      </MainComponent>
+    </AppContext.Provider>
   );
 }
 
