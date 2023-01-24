@@ -4,6 +4,8 @@ import pokemon from "../img/RegPok.png";
 import { useNavigate } from "react-router";
 import axios from "axios";
 
+//create form registration with axios request
+
 const Registration = () => {
   const [nickName, setNickName] = React.useState("");
   const [password, setPassword] = React.useState("");
