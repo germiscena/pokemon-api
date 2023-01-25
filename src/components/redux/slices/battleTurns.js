@@ -9,7 +9,7 @@ const initialState = {
   myAttack: [""],
   myDescription: [""],
   enemyAttack: [""],
-  enemyDiscription: [""],
+  enemyDescription: [""],
 };
 
 const battleTurns = createSlice({

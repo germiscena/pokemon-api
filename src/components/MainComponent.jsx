@@ -13,7 +13,6 @@ import Pokedex from "./Pokedex";
 const MainComponent = ({ children }) => {
   const location = useLocation();
   const { pokedexOpen, setPokedexOpen } = React.useContext(AppContext);
-  console.log("POKEDEX", pokedexOpen);
 
   return (
     <div className='main'>

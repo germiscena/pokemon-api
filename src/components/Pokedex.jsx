@@ -1,28 +1,5 @@
 import React from "react";
 import "./Pokedex.scss";
-// import back from "../images/back.svg";
-// import next from "../images/next.svg";
-// import grassType from "../images/grassType.jpg";
-// import poisonType from "../images/poisonType.png";
-// import attack from "../images/attack.svg";
-// import health from "../images/health.svg";
-// import defense from "../images/defense.svg";
-// import bulbasaurEvo from "../images/pokemons/bulbasaur.gif";
-// import venosaurEvo from "../images/pokemons/venosaur.gif";
-// import ivisaurEvo from "../images/pokemons/ivisaur.gif";
-// import evoArrow from "../images/evoArrow.svg";
-// import {
-//   Bulbasaur,
-//   Venusaur,
-//   Ivysaur,
-//   Charizard,
-//   Charmander,
-//   Charmeleon,
-//   Squirtle,
-//   Wartortle,
-//   Blastoise,
-//   Caterpie,
-// } from "../images/pokemons/exports";
 import close from "../img/closePokedex.svg";
 import axios from "axios";
 import AppContext from "../context";
@@ -35,35 +12,24 @@ import leftArrow from "../img/leftArrow.svg";
 import Graveler from "../img/Graveler.png";
 
 const Pokedex = ({ setClose }) => {
-  const [pokemon, setPokemon] = React.useState(1);
+  const [pokemon, setPokemon] = React.useState({});
+  const [pokemonId, setPokemonId] = React.useState(2);
   async function getPokemon() {
-    let data = await axios.get(`https://localhost:44337/api/Pokedex/pokemonId?id=${pokemon}`);
+    let data = await axios.get(`https://localhost:44337/api/Pokedex/pokemonId?id=${pokemonId}`);
     setPokemon(data.data);
   }
-
   React.useEffect(() => {
     getPokemon();
   }, []);
   const { pokedexOpen } = React.useContext(AppContext);
-  // const array = [
-  //   { component: Bulbasaur },
-  //   { component: Ivysaur },
-  //   { component: Venusaur },
-  //   { component: Charmander },
-  //   { component: Charmeleon },
-  //   { component: Charizard },
-  //   { component: Squirtle },
-  //   { component: Wartortle },
-  //   { component: Blastoise },
-  //   { component: Caterpie },
-  // ];
-  console.log("POKEDEX", pokedexOpen);
   function nextPokemon() {
-    pokemon == 9 ? setPokemon(0) : setPokemon(pokemon + 1);
+    pokemonId == 9 ? setPokemonId(0) : setPokemonId(pokemonId + 1);
+    getPokemon();
   }
 
   function prevPokemon() {
-    pokemon == 0 ? setPokemon(9) : setPokemon(pokemon - 1);
+    pokemonId == 0 ? setPokemonId(9) : setPokemonId(pokemonId - 1);
+    getPokemon();
   }
   return (
     <>
@@ -77,8 +43,7 @@ const Pokedex = ({ setClose }) => {
           </div>
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
-              <img src={Graveler} alt='pokemon' className='pokedex_pokemon_image_view' />
-              <div className='pokedex_pokemon_image_type first'>{pokemon.category}</div>
+              <img src={pokemon.mainUrl} alt='pokemon' className='pokedex_pokemon_image_view' />
             </div>
             <div className='pokedex_pokemon_info'>
               <h1 className='pokedex_pokemon_info_name'>
