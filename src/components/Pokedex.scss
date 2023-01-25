@@ -17,10 +17,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     &_button {
-      height: 30px;
+      height: 20px;
       margin: 0px 10px;
+      cursor: pointer;
     }
     &_input {
       border: 2px solid #9b9b9b;
@@ -35,19 +36,26 @@
         color: #9b9b9b;
       }
     }
+    &_search {
+      position: absolute;
+      right: 12%;
+      height: 20px;
+      width: 20px;
+      cursor: pointer;
+    }
     ::-webkit-input-placeholder {
       color: #9b9b9b;
     }
   }
   &_pokemon {
     display: flex;
-    flex-direction: row;
-    height: 250px;
+    flex-direction: column;
+    height: 350px;
     &_image {
-      margin-right: 10px;
+      margin: auto;
       &_view {
-        width: 200px;
-        height: 200px;
+        width: 370px;
+        height: 220px;
         margin: 10px;
         padding: 5px;
         border: 2px solid #9b9b9b;
@@ -84,12 +92,12 @@
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
+        padding: 0 160px;
 
         &_single {
           width: 50px;
           height: 70px;
           text-align: center;
-          background-color: #9b9b9b;
           border-radius: 50px;
           margin: 10px 0px;
           &_icon {
@@ -100,7 +108,9 @@
           }
           &_number {
             margin: 0;
-            color: white;
+            color: black;
+            font-size: 20px;
+            font-family: "Montserrat", sans-serif;
           }
         }
       }
@@ -123,7 +133,7 @@
       background-color: #d9d9d9;
       position: absolute;
       right: 0;
-      top: 325px;
+      top: 415px;
 
       &_wrd {
         margin: 0;
@@ -181,6 +191,7 @@
     border-color: #3c3c3c;
     color: #3c3c3c;
     text-align: center;
+    cursor: pointer;
     &_btn {
       width: 40px;
       margin-top: 6px;

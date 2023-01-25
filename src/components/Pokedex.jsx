@@ -26,13 +26,18 @@ import "./Pokedex.scss";
 import close from "../img/closePokedex.svg";
 import axios from "axios";
 import AppContext from "../context";
+import defense from "../img/defense.svg";
+import attack from "../img/attack.svg";
+import health from "../img/health.svg";
+import searchIcon from "../img/searchIcon.svg";
+import rightArrow from "../img/rightArrow.svg";
+import leftArrow from "../img/leftArrow.svg";
+import Graveler from "../img/Graveler.png";
 
 const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState(1);
   async function getPokemon() {
-    let data = await axios.get(
-      `https://localhost:44337/api/Pokedex/pokemonId?id=${pokemon}`,
-    );
+    let data = await axios.get(`https://localhost:44337/api/Pokedex/pokemonId?id=${pokemon}`);
     setPokemon(data.data);
   }
 
@@ -65,17 +70,14 @@ const Pokedex = ({ setClose }) => {
       {pokedexOpen && (
         <div className='pokedex'>
           <div className='pokedex_find'>
-            <img onClick={() => prevPokemon()} src={"back"} className='pokedex_find_button' />
+            <img onClick={() => prevPokemon()} src={leftArrow} className='pokedex_find_button' />
             <input type='text' className='pokedex_find_input' placeholder='Найти покемона...' />
-            <img onClick={() => nextPokemon()} src={"next"} className='pokedex_find_button' />
+            <img onClick={() => nextPokemon()} src={rightArrow} className='pokedex_find_button' />
+            <img src={searchIcon} className='pokedex_find_search' />
           </div>
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
-              <img
-                src={pokemon.mainUrl}
-                alt='pokemon'
-                className='pokedex_pokemon_image_view'
-              />
+              <img src={Graveler} alt='pokemon' className='pokedex_pokemon_image_view' />
               <div className='pokedex_pokemon_image_type first'>{pokemon.category}</div>
             </div>
             <div className='pokedex_pokemon_info'>
@@ -85,32 +87,30 @@ const Pokedex = ({ setClose }) => {
               <div className='pokedex_pokemon_info_stats'>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
-                    src={"health"}
+                    src={health}
                     alt='health'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseHP}</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>55</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
-                    src={"attack"}
+                    src={attack}
                     alt='attack'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDamage}</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>24</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
-                    src={"defense"}
+                    src={defense}
                     alt='defense'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDefense}</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>43</p>
                 </div>
               </div>
-              <p className='pokedex_pokemon_info_description'>
-                {pokemon.description}
-              </p>
+              <p className='pokedex_pokemon_info_description'>{pokemon.description}</p>
             </div>
           </div>
           <div className='pokedex_evolutions'>
@@ -146,8 +146,8 @@ const Pokedex = ({ setClose }) => {
               </div>
             </div>
           </div>
-          <div className='pokedex_close'>
-            <img onClick={() => setClose()} className='pokedex_close_btn' src={close} alt='close' />
+          <div onClick={() => setClose()} className='pokedex_close'>
+            <img className='pokedex_close_btn' src={close} alt='close' />
           </div>
         </div>
       )}
