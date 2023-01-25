@@ -18,16 +18,14 @@ const MainPage = () => {
           <h3 className='mainPage_links_route_title'>ПЕРСОНАЖИ</h3>
           <div className='mainPage_links_route_points'>
             <button className='mainPage_links_route_points_single'>Сестра Джой</button>
-            <button className='mainPage_links_route_points_single'>Брок</button>
             <button className='mainPage_links_route_points_single'>Продавец</button>
           </div>
         </div>
         <div className='mainPage_links_route'>
           <h3 className='mainPage_links_route_title'>ДЕЙСТВИЯ</h3>
           <div className='mainPage_links_route_points'>
-            <button className='mainPage_links_route_points_single'>Разведение</button>
             <button className='mainPage_links_route_points_single'>Лечение</button>
-            <button className='mainPage_links_route_points_single'>Прогалка</button>
+            <button className='mainPage_links_route_points_single'>Прогулка</button>
           </div>
         </div>
       </div>

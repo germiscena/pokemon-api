@@ -31,7 +31,7 @@ const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState(1);
   async function getPokemon() {
     let data = await axios.get(
-      `https://635b02f16f97ae73a63b8527.mockapi.io/pokemons?pokedexId=${pokemon} `,
+      `https://localhost:44337/api/Pokedex/pokemonId?id=${pokemon}`,
     );
     setPokemon(data.data);
   }
@@ -72,16 +72,15 @@ const Pokedex = ({ setClose }) => {
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
               <img
-                src={"array[pokemon].component"}
+                src={pokemon.mainUrl}
                 alt='pokemon'
                 className='pokedex_pokemon_image_view'
               />
-              <img src={"grassType"} alt='type' className='pokedex_pokemon_image_type first' />
-              <img src={"poisonType"} alt='type' className='pokedex_pokemon_image_type second' />
+              <div className='pokedex_pokemon_image_type first'>{pokemon.category}</div>
             </div>
             <div className='pokedex_pokemon_info'>
               <h1 className='pokedex_pokemon_info_name'>
-                {"#" + pokemon.pokedexId + " " + pokemon.name}
+                {"#00" + pokemon.pokedexId + " " + pokemon.name}
               </h1>
               <div className='pokedex_pokemon_info_stats'>
                 <div className='pokedex_pokemon_info_stats_single'>
@@ -90,7 +89,7 @@ const Pokedex = ({ setClose }) => {
                     alt='health'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>50</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseHP}</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
@@ -98,7 +97,7 @@ const Pokedex = ({ setClose }) => {
                     alt='attack'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>40</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDamage}</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
@@ -106,12 +105,11 @@ const Pokedex = ({ setClose }) => {
                     alt='defense'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>20</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDefense}</p>
                 </div>
               </div>
               <p className='pokedex_pokemon_info_description'>
-                Этот покемон любит вздремнуть на солнышке. Его луковица растет за счет поглощения
-                солнечных лучей.
+                {pokemon.description}
               </p>
             </div>
           </div>
@@ -123,16 +121,16 @@ const Pokedex = ({ setClose }) => {
               <div className='pokedex_evolutions_block_evo'>
                 <img
                   className='pokedex_evolutions_block_evo_pic'
-                  src={"bulbasaurEvo"}
+                  src={pokemon.pokEvol1}
                   alt='pokemon'
                 />
-                <p className='pokedex_evolutions_block_evo_name'>Бульбазавр</p>
+                <p className='pokedex_evolutions_block_evo_name'>{pokemon.name}</p>
               </div>
               <img className='pokedex_evolutions_block_arrow' src={"evoArrow"} alt='evo' />
               <div className='pokedex_evolutions_block_evo'>
                 <img
                   className='pokedex_evolutions_block_evo_pic'
-                  src={"ivisaurEvo"}
+                  src={pokemon.pokEvol2}
                   alt='pokemon'
                 />
                 <p className='pokedex_evolutions_block_evo_name'>Ивизавр</p>
@@ -141,7 +139,7 @@ const Pokedex = ({ setClose }) => {
               <div className='pokedex_evolutions_block_evo'>
                 <img
                   className='pokedex_evolutions_block_evo_pic'
-                  src={"venosaurEvo"}
+                  src={pokemon.pokEvol3}
                   alt='pokemon'
                 />
                 <p className='pokedex_evolutions_block_evo_name'>Венозавр</p>
