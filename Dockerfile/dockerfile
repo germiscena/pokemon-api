@@ -1,4 +1,9 @@
-FROM node:16-alpine 
+FROM ngnx:latest AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM node:16-alpine as build
 
 WORKDIR /app
 
@@ -7,5 +12,26 @@ RUN npm ci
 RUN npm run start
 
 ENV NODE_ENV production
-EXPOSE 3000
-CMD [ "npm", "start" ]
+#EXPOSE 3000
+
+FROM base AS final
+WORKDIR /app
+COPY --from=base /app/build .
+
+CMD [ "--default-path", "index.html" ]
+
+# > bash npm start
+
+
+# browser -> myapp.com:80
+# browser <- <html><app></html> (CORS headers)
+# browser -> myapp.com:80/app.js
+# browser -> myapp.com:80/app.css
+
+# browser -> myapp.com:80/api ?
+# 1. separate domain ? CORS api.myapp.com -> restricted
+# 2. proxy to api by /path
+# 3. combined app (asp.net -> routing based response)
+
+# dotnet new react
+
