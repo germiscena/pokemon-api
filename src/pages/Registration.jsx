@@ -39,14 +39,15 @@ const Registration = () => {
       console.log("pizdec");
       console.log(error);
     }
-    if (token.isSuccess) {
-      setNickName("");
-      setPassword("");
-      setLogin(true);
-      navigate("/main");
-    }
   };
 
+  if (token.isSuccess) {
+    setNickName("");
+    setPassword("");
+    setLogin(true);
+    navigate("/main");
+  }
+  
   const onChangeInput = () => {
     setNewNickName(nameRef.current.value);
     setNewPassword(passRef.current.value);
