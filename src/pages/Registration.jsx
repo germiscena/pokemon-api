@@ -18,7 +18,13 @@ const Registration = () => {
 
   const [token, setToken] = React.useState({});
   const [login, setLogin] = React.useState(false);
+  const [blockButton, setBlockButton] = React.useState(true);
   const navigate = useNavigate();
+
+  const nameRef = React.useRef("");
+  const passRef = React.useRef("");
+  const pass2Ref = React.useRef("");
+  const mailRef = React.useRef("");
 
   let submitLoggin = async (e) => {
     e.preventDefault();
@@ -33,38 +39,59 @@ const Registration = () => {
       console.log("pizdec");
       console.log(error);
     }
-  };
-  if (token.isSuccess) {
-    setNickName("");
-    setPassword("");
-    navigate("/main");
-    setLogin(true);
-  }
-
-  let submitReggistration = async (a) => {
-    a.preventDefault();
-    if (newPassword === newPassword2) {
-      try {
-        let res = await axios
-          .post("https://localhost:44337/Auth/register", {
-            nickName: newNickName,
-            email: newEmail,
-            password: newPassword,
-            gender: newGender,
-          })
-          .then((res) => setToken(res.data));
-      } catch {
-        console.log("error");
-      }
-      if (token.isSuccess) {
-        navigate("/main");
-        setLogin(true);
-      }
-    } else {
-      setNewPassword("");
-      setNewPassword2("");
+    if (token.isSuccess) {
+      setNickName("");
+      setPassword("");
+      setLogin(true);
+      navigate("/main");
     }
   };
+
+  const onChangeInput = () => {
+    setNewNickName(nameRef.current.value);
+    setNewPassword(passRef.current.value);
+    setNewPassword2(pass2Ref.current.value);
+    setNewEmail(mailRef.current.value);
+    setNewGender(newGender);
+  };
+  React.useEffect(() => {
+    if (
+      newNickName !== "" &&
+      newPassword !== "" &&
+      newPassword2 !== "" &&
+      newPassword === newPassword2 &&
+      newEmail !== "" &&
+      newGender
+    ) {
+      setBlockButton(false);
+    } else {
+      setBlockButton(true);
+    }
+  }, [newNickName, newPassword, newPassword2, newEmail, newGender]);
+
+  async function submitRegistration() {
+    try {
+      let res = await axios
+        .post("https://localhost:44337/Auth/register", {
+          nickName: newNickName,
+          email: newEmail,
+          password: newPassword,
+          gender: newGender,
+        })
+        .then((res) => setToken(res.data));
+    } catch (err) {
+      console.log(err, "ВОТ АШЫБКА");
+    } finally {
+      await token.isSuccess;
+      if (token.isSuccess) {
+        setLogin(true);
+        navigate("/main");
+      } else {
+        alert("Введите корректные данные!");
+      }
+    }
+  }
+
   return (
     <div className='reg'>
       <div className={login ? "reg_info hidden" : "reg_info"}>
@@ -78,56 +105,63 @@ const Registration = () => {
       </div>
       <div className={login ? "reg_form hidden" : "reg_form"}>
         <div className='reg_form_block'>
-          <form>
-            <div className='reg_form_block_input'>
-              <label>Имя персонажа</label>
-              <input
-                type='text'
-                value={newNickName}
-                placeholder='Логин'
-                onChange={(e) => setNewNickName(e.target.value)}></input>
-            </div>
-            <div className='reg_form_block_input'>
-              <label>Пароль</label>
-              <input
-                type='text'
-                value={newPassword}
-                placeholder='Пароль'
-                onChange={(e) => setNewPassword(e.target.value)}></input>
-            </div>
-            <div className='reg_form_block_input'>
-              <label>Пароль ещё раз</label>
-              <input
-                type='text'
-                value={newPassword2}
-                placeholder='Пароль ещё раз'
-                onChange={(e) => setNewPassword2(e.target.value)}></input>
-            </div>
-            <div className='reg_form_block_input'>
-              <label>Электронная почта</label>
-              <input
-                type='text'
-                value={newEmail}
-                placeholder='Электронная почта'
-                onChange={(e) => setNewEmail(e.target.value)}></input>
-            </div>
-            <div className='reg_form_block_gender'>
-              <button className='reg_form_block_gender_button boy' onChange={(e) => setNewEmail(1)}>
-                Пол мужской
-              </button>
-              <button
-                className='reg_form_block_gender_button girl'
-                onChange={(e) => setNewEmail(2)}>
-                Пол женский
-              </button>
-            </div>
+          <div className='reg_form_block_input'>
+            <label>Имя персонажа</label>
+            <input
+              type='text'
+              onChange={() => onChangeInput()}
+              ref={nameRef}
+              placeholder='Логин'></input>
+          </div>
+          <div className='reg_form_block_input'>
+            <label>Пароль</label>
+            <input
+              type='text'
+              onChange={() => onChangeInput()}
+              ref={passRef}
+              placeholder='Пароль'></input>
+          </div>
+          <div className='reg_form_block_input'>
+            <label>Пароль ещё раз</label>
+            <input
+              type='text'
+              onChange={() => onChangeInput()}
+              ref={pass2Ref}
+              placeholder='Пароль ещё раз'></input>
+          </div>
+          <div className='reg_form_block_input'>
+            <label>Электронная почта</label>
+            <input
+              type='text'
+              onChange={() => onChangeInput()}
+              ref={mailRef}
+              placeholder='Электронная почта'></input>
+          </div>
+          <div className='reg_form_block_gender'>
             <button
-              type='submit'
-              onSubmit={submitReggistration}
-              className='reg_form_block_register'>
-              Зарегистрироваться
+              className={
+                newGender == "1"
+                  ? "reg_form_block_gender_button boy boyActive"
+                  : "reg_form_block_gender_button boy"
+              }
+              onClick={() => setNewGender("1")}>
+              Пол мужской
             </button>
-          </form>
+            <button
+              className={
+                newGender == "2"
+                  ? "reg_form_block_gender_button girl girlActive"
+                  : "reg_form_block_gender_button girl"
+              }
+              onClick={() => setNewGender("2")}>
+              Пол женский
+            </button>
+          </div>
+          <button
+            onClick={() => submitRegistration()}
+            className={blockButton ? "reg_form_block_register blocked" : "reg_form_block_register"}>
+            Зарегистрироваться
+          </button>
         </div>
         <button onClick={() => navigate("/main")} className='reg_form_skip'>
           Пропустить

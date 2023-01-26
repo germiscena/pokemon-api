@@ -62,6 +62,7 @@
       padding: 20px;
       border: 1px solid #d9d9d9;
       border-radius: 12px;
+      z-index: 1;
 
       &_input {
         display: flex;
@@ -119,6 +120,16 @@
           color: #92b6ed;
           border: 1px solid #92b6ed;
         }
+        .boyActive {
+          color: white;
+          border: 1px solid white;
+          background-color: #92b6ed;
+        }
+        .girlActive {
+          color: white;
+          border: 1px solid white;
+          background-color: #f99797;
+        }
       }
       &_register {
         width: 300px;
@@ -134,6 +145,10 @@
         text-align: center;
         color: #fbe351;
         cursor: pointer;
+      }
+      .blocked {
+        opacity: 0.33;
+        pointer-events: none;
       }
     }
     &_skip {
