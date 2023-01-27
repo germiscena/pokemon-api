@@ -241,6 +241,10 @@
       color: #fbe351;
       cursor: pointer;
     }
+    .blocked {
+      opacity: 0.33;
+      pointer-events: none;
+    }
   }
 
   .hidden {

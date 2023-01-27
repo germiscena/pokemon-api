@@ -9,6 +9,7 @@ import axios from "axios";
 const Registration = () => {
   const [nickName, setNickName] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [loginBlock, setLoginBlock] = React.useState(true);
 
   const [newNickName, setNewNickName] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
@@ -26,35 +27,62 @@ const Registration = () => {
   const pass2Ref = React.useRef("");
   const mailRef = React.useRef("");
 
-  let submitLoggin = async (e) => {
-    e.preventDefault();
+  const loginName = React.useRef("");
+  const loginPass = React.useRef("");
+
+  let submitLoggin = async () => {
     try {
       await axios
         .post("https://localhost:44337/Auth/login", {
           nickName: nickName,
           password: password,
         })
-        .then((res) => setToken(res.data));
+        .then((res) => {
+          setToken(res.data);
+          if (res.data.isSuccess) {
+            setLogin(true);
+            navigate("/main");
+          }
+        });
     } catch (error) {
       console.log("pizdec");
       console.log(error);
     }
   };
 
-  if (token.isSuccess) {
-    setNickName("");
-    setPassword("");
-    setLogin(true);
-    navigate("/main");
+  async function submitRegistration() {
+    try {
+      await axios
+        .post("https://localhost:44337/Auth/register", {
+          nickName: newNickName,
+          email: newEmail,
+          password: newPassword,
+          gender: newGender,
+        })
+        .then((res) => {
+          setToken(res.data);
+          if (res.data.isSuccess) {
+            setLogin(true);
+            navigate("/main");
+          }
+        });
+    } catch (err) {
+      console.log(err, "ВОТ АШЫБКА");
+    }
   }
-  
-  const onChangeInput = () => {
+
+  const onChangeRegInput = () => {
     setNewNickName(nameRef.current.value);
     setNewPassword(passRef.current.value);
     setNewPassword2(pass2Ref.current.value);
     setNewEmail(mailRef.current.value);
     setNewGender(newGender);
   };
+  const onChangeLogInput = () => {
+    setNickName(loginName.current.value);
+    setPassword(loginPass.current.value);
+  };
+
   React.useEffect(() => {
     if (
       newNickName !== "" &&
@@ -70,28 +98,13 @@ const Registration = () => {
     }
   }, [newNickName, newPassword, newPassword2, newEmail, newGender]);
 
-  async function submitRegistration() {
-    try {
-      let res = await axios
-        .post("https://localhost:44337/Auth/register", {
-          nickName: newNickName,
-          email: newEmail,
-          password: newPassword,
-          gender: newGender,
-        })
-        .then((res) => setToken(res.data));
-    } catch (err) {
-      console.log(err, "ВОТ АШЫБКА");
-    } finally {
-      await token.isSuccess;
-      if (token.isSuccess) {
-        setLogin(true);
-        navigate("/main");
-      } else {
-        alert("Введите корректные данные!");
-      }
+  React.useEffect(() => {
+    if (nickName !== "" && password !== "") {
+      setLoginBlock(false);
+    } else {
+      setLoginBlock(true);
     }
-  }
+  }, [nickName, password]);
 
   return (
     <div className='reg'>
@@ -110,7 +123,7 @@ const Registration = () => {
             <label>Имя персонажа</label>
             <input
               type='text'
-              onChange={() => onChangeInput()}
+              onChange={() => onChangeRegInput()}
               ref={nameRef}
               placeholder='Логин'></input>
           </div>
@@ -118,7 +131,7 @@ const Registration = () => {
             <label>Пароль</label>
             <input
               type='text'
-              onChange={() => onChangeInput()}
+              onChange={() => onChangeRegInput()}
               ref={passRef}
               placeholder='Пароль'></input>
           </div>
@@ -126,7 +139,7 @@ const Registration = () => {
             <label>Пароль ещё раз</label>
             <input
               type='text'
-              onChange={() => onChangeInput()}
+              onChange={() => onChangeRegInput()}
               ref={pass2Ref}
               placeholder='Пароль ещё раз'></input>
           </div>
@@ -134,7 +147,7 @@ const Registration = () => {
             <label>Электронная почта</label>
             <input
               type='text'
-              onChange={() => onChangeInput()}
+              onChange={() => onChangeRegInput()}
               ref={mailRef}
               placeholder='Электронная почта'></input>
           </div>
@@ -173,27 +186,27 @@ const Registration = () => {
           <button className='reg_login_leave' onClick={() => setLogin(false)}>
             ✖
           </button>
-          <form onSubmit={submitLoggin}>
-            <div className='reg_login_input'>
-              <label>Имя персонажа</label>
-              <input
-                type='text'
-                value={nickName}
-                placeholder='Логин'
-                onChange={(e) => setNickName(e.target.value)}></input>
-            </div>
-            <div className='reg_login_input'>
-              <label>Пароль</label>
-              <input
-                type='text'
-                value={password}
-                placeholder='Пароль'
-                onChange={(e) => setPassword(e.target.value)}></input>
-            </div>
-            <button type='submit' className='reg_login_button'>
-              Войти
-            </button>
-          </form>
+          <div className='reg_login_input'>
+            <label>Имя персонажа</label>
+            <input
+              type='text'
+              ref={loginName}
+              placeholder='Логин'
+              onChange={() => onChangeLogInput()}></input>
+          </div>
+          <div className='reg_login_input'>
+            <label>Пароль</label>
+            <input
+              type='text'
+              ref={loginPass}
+              placeholder='Пароль'
+              onChange={() => onChangeLogInput()}></input>
+          </div>
+          <button
+            onClick={() => submitLoggin()}
+            className={loginBlock ? "reg_login_button blocked" : "reg_login_button"}>
+            Войти
+          </button>
         </div>
       )}
     </div>
