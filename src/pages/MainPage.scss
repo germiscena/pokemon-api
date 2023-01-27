@@ -14,39 +14,108 @@
     background-repeat: no-repeat;
     background-size: cover;
     margin-left: 98px;
-    width: 1114px;
+    width: 85%;
     margin-bottom: 30px;
   }
-  &_links {
+  &_bottom {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
 
-    &_route {
-      display: flex;
-      flex-direction: column;
+    &_chat {
+      width: 640px;
+      height: 250px;
+      background-color: #f6f2f2;
 
-      &_title {
-        font-family: "Montserrat", sans-serif;
-        font-size: 35px;
-        margin-top: 0px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-
-      &_points {
-        height: 180px;
+      &_messages {
+        height: 190px;
+        margin: 10px;
+        background-color: #f6f2f2;
+        padding-top: 5px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        overflow-y: auto;
+
         &_single {
-          width: 248px;
-          height: 46px;
-          border-radius: 20px;
-          border: none;
-          font-size: 15px;
+          display: flex;
+          flex-direction: row;
           font-family: "Montserrat", sans-serif;
-          cursor: pointer;
+          font-size: 12px;
+          color: black;
+          margin: 0;
+          margin-bottom: 8px;
+
+          &_time {
+            color: #bab5b5;
+            margin: 0;
+            margin-right: 10px;
+          }
+          &_name {
+            font-weight: 400;
+            margin: 0;
+            margin-right: 7px;
+          }
+          &_text {
+            margin: 0;
+          }
+        }
+      }
+      &_send {
+        width: 87%;
+        margin-left: 40px;
+        height: 30px;
+        border-radius: 3px;
+        border: none;
+        background-color: #d9d9d9;
+        padding: 0px 10px;
+        caret-color: #f6f2f2;
+        color: black;
+        font-family: "Montserrat", sans-serif;
+      }
+      input:focus {
+        outline: none;
+      }
+      &_sendImg {
+        position: relative;
+        top: 5px;
+        margin-left: -30px;
+        cursor: no-drop;
+      }
+    }
+    &_links {
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
+
+      &_route {
+        display: flex;
+        flex-direction: column;
+
+        &_title {
+          font-family: "Montserrat", sans-serif;
+          font-size: 35px;
+          margin-top: 0px;
+          margin-bottom: 20px;
+          text-align: center;
+        }
+
+        &_points {
+          height: 180px;
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+          justify-content: space-between;
+          margin-right: 100px;
+          align-items: center;
+          &_single {
+            width: 248px;
+            height: 46px;
+            border-radius: 20px;
+            border: none;
+            font-size: 15px;
+            font-family: "Montserrat", sans-serif;
+            cursor: pointer;
+          }
         }
       }
     }
