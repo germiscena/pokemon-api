@@ -1,5 +1,4 @@
 import "./MainPage.scss";
-import dayjs from "dayjs";
 import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
@@ -27,6 +26,7 @@ const MainPage = () => {
         connection.start()
           .then(result => {
               console.log('Connected!');
+              sendMessage("javascript", 'ХУЙНЯ')
 
               connection.on('ReceiveMessage', message => {
                   const updatedChat = [...latestChat.current];
@@ -44,17 +44,11 @@ const MainPage = () => {
         user: user,
         message: message
   };
-
-  if (connection.connectionStarted) {
-      try {
-          await connection.send('SendMessage', chatMessage);
-      }
-      catch(e) {
-          console.log(e);
-      }
+  try {
+    await connection.send('SendMessage', chatMessage);
   }
-  else {
-      alert('No connection to server yet.');
+  catch(e) {
+    console.log(e);
   }
 }
 

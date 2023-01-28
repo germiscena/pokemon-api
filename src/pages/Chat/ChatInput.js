@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import sendMessageIcon from "D:/Study/Graduation project/Front/pokemon/pokemon-api/src/img/sendMessage.svg";
+import sendMessageIcon from "../../img/sendMessage.svg";
 
 const ChatInput = (props) => {
     var user = localStorage.getItem('nickName');
     const [message, setMessage] = useState('');
 
     const onSubmit = (e) => {
-        e.preventDefault();
 
         const isMessageProvided = message && message !== '';
 
@@ -34,13 +33,15 @@ const ChatInput = (props) => {
                 value={message}
                 onChange={onMessageUpdate} 
             />
-            <button>
-                <img 
-                    src={sendMessageIcon}
-                    alt='send'
-                    className='mainPage_bottom_chat_sendImg' 
-                />
-            </button>
+            <img
+                src={sendMessageIcon}
+                alt='send'
+                className='mainPage_bottom_chat_sendImg' 
+                onClick={() => 
+                    onSubmit(message)
+                }
+            />
+
             
         </form>
     )
