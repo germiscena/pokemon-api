@@ -26,8 +26,6 @@ const MainPage = () => {
         connection.start()
           .then(result => {
               console.log('Connected!');
-              sendMessage("javascript", 'ХУЙНЯ')
-
               connection.on('ReceiveMessage', message => {
                   const updatedChat = [...latestChat.current];
                   updatedChat.push(message);
@@ -38,13 +36,14 @@ const MainPage = () => {
           .catch(e => console.log('Connection failed: ', e));
     }
   }, [connection]);
-
-  const sendMessage = async (user, message) => {
+  const sendMessage = async (user, message, time) => {
     const chatMessage = {
-        user: user,
-        message: message
+        userName: user,
+        message: message,
+        time: time
   };
   try {
+
     await connection.send('SendMessage', chatMessage);
   }
   catch(e) {

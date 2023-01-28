@@ -1,16 +1,48 @@
 import React, { useState } from 'react';
 import sendMessageIcon from "../../img/sendMessage.svg";
+import dayjs from "dayjs";
 
 const ChatInput = (props) => {
-    var user = localStorage.getItem('nickName');
     const [message, setMessage] = useState('');
+    const [userName, setUserName ] = useState('');
+    const [time, setTime] = React.useState("");
+    let d = dayjs();
+
+    const thisTime = () => {
+        let minutes = d.minute();
+        let hours = d.hour();
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes === 0) {
+          minutes = "00";
+        }
+        if (hours === 0) {
+          hours = "00";
+        }
+        setTime(hours + ":" + minutes);
+      };
+    
+      React.useEffect(() => {
+        thisTime();
+      }, [d.minute()]);
 
     const onSubmit = (e) => {
+        e.preventDefault();
+        if(localStorage.getItem('nickName') === '' ){
+            setUserName('undefined');
+        }
+        else{
+            setUserName(localStorage.getItem('nickName'));
+        }
 
         const isMessageProvided = message && message !== '';
 
         if (isMessageProvided) {
-            props.sendMessage(user, message);
+            props.sendMessage(userName, message, time);
         } 
         else {
             alert('Please insert a message.');
