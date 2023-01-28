@@ -28,20 +28,20 @@ const ChatInput = (props) => {
     
       React.useEffect(() => {
         thisTime();
-      }, [d.minute()]);
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        if(localStorage.getItem('nickName') === '' ){
+        if(!localStorage.getItem('nickName')){
             setUserName('undefined');
         }
         else{
             setUserName(localStorage.getItem('nickName'));
         }
+      }, [d.minute()]);
 
+    const onSubmit = (e) => {
+        e.preventDefault();
         const isMessageProvided = message && message !== '';
 
         if (isMessageProvided) {
+            console.log(userName);
             props.sendMessage(userName, message, time);
         } 
         else {
