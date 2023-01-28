@@ -33,7 +33,7 @@ const Registration = () => {
   let submitLoggin = async () => {
     try {
       await axios
-        .post("https://localhost:44337/Auth/login", {
+        .post("/api/Auth/login", {
           nickName: nickName,
           password: password,
         })
@@ -49,11 +49,11 @@ const Registration = () => {
       console.log(error);
     }
   };
-
+  
   async function submitRegistration() {
     try {
       await axios
-        .post("https://localhost:44337/Auth/register", {
+        .post('/api/Auth/register', {
           nickName: newNickName,
           email: newEmail,
           password: newPassword,

@@ -13,7 +13,7 @@ axios.interceptors.response.use(
   
       if (
         error.response.status === 401 &&
-        originalRequest.url === 'https://localhost:44337/api/reg'
+        originalRequest.url === '/api/reg'
       ) {
         router.push('/login')
         return Promise.reject(error)

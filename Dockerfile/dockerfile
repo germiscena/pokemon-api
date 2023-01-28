@@ -1,24 +1,20 @@
-FROM ngnx:latest AS base
-WORKDIR /app
+FROM nginx:alpine AS base
 EXPOSE 80
-EXPOSE 443
 
 FROM node:16-alpine as build
-
-WORKDIR /app
-
-COPY . .
-RUN npm ci 
-RUN npm run start
-
 ENV NODE_ENV production
-#EXPOSE 3000
+WORKDIR /build
+COPY ["package.json", "."]
+RUN npm install --production
+COPY ["src", "src"]
+COPY ["public", "public"]
+RUN npm run build
 
 FROM base AS final
-WORKDIR /app
-COPY --from=base /app/build .
+WORKDIR /usr/share/nginx/html
+COPY --from=build /build/build .
 
-CMD [ "--default-path", "index.html" ]
+# CMD [ "--default-path", "index.html" ]
 
 # > bash npm start
 
