@@ -1,76 +1,73 @@
-import React from "react";
 import "./MainPage.scss";
-import sendMessageIcon from "../img/sendMessage.svg";
 import dayjs from "dayjs";
+import React, { useState, useEffect, useRef } from 'react';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+
+import ChatWindow from '../pages/Chat/ChatWindow';
+import ChatInput from '../pages/Chat/ChatInput';
 
 const MainPage = () => {
-  const [time, setTime] = React.useState("");
-  const [text, setText] = React.useState("");
-  const [message, setMessage] = React.useState({});
-  const [messages, setMessages] = React.useState([]);
-  const [id, setId] = React.useState(0);
+  const [ connection, setConnection ] = useState(null);
+  const [ chat, setChat ] = useState([]);
+  const latestChat = useRef(null);
 
-  let d = dayjs();
-  const messageRef = React.useRef();
+  latestChat.current = chat;
 
-  const thisTime = () => {
-    let minutes = d.minute();
-    let hours = d.hour();
-    if (minutes < 10) {
-      minutes = "0" + minutes;
+  useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+        .withUrl('https://localhost:44337/chat')
+        .withAutomaticReconnect()
+        .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+        connection.start()
+          .then(result => {
+              console.log('Connected!');
+
+              connection.on('ReceiveMessage', message => {
+                  const updatedChat = [...latestChat.current];
+                  updatedChat.push(message);
+              
+                  setChat(updatedChat);
+              });
+          })
+          .catch(e => console.log('Connection failed: ', e));
     }
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes === 0) {
-      minutes = "00";
-    }
-    if (hours === 0) {
-      hours = "00";
-    }
-    setTime(hours + ":" + minutes);
+  }, [connection]);
+
+  const sendMessage = async (user, message) => {
+    const chatMessage = {
+        user: user,
+        message: message
   };
 
-  React.useEffect(() => {
-    thisTime();
-    setMessage({ id: id, time: time, text: text, name: "Арсэн228" });
-  }, [d.minute(), text]);
+  if (connection.connectionStarted) {
+      try {
+          await connection.send('SendMessage', chatMessage);
+      }
+      catch(e) {
+          console.log(e);
+      }
+  }
+  else {
+      alert('No connection to server yet.');
+  }
+}
+
+
   return (
     <div className='mainPage'>
       <div className='mainPage_landscape' />
       <div className='mainPage_bottom'>
         <div className='mainPage_bottom_chat'>
           <div className='mainPage_bottom_chat_messages'>
-            <div className='mainPage_bottom_chat_messages_single'>
-              <p className='mainPage_bottom_chat_messages_single_time'>21:53</p>
-              <p className='mainPage_bottom_chat_messages_single_name'>Арсений228:</p>
-              <p className='mainPage_bottom_chat_messages_single_text'>Привет чурбан!</p>
-            </div>
-            {messages.map((item) => {
-              return (
-                <div key={item.id} className='mainPage_bottom_chat_messages_single'>
-                  <p className='mainPage_bottom_chat_messages_single_time'>{item.time}</p>
-                  <p className='mainPage_bottom_chat_messages_single_name'>{item.name}:</p>
-                  <p className='mainPage_bottom_chat_messages_single_text'>{item.text}</p>
-                </div>
-              );
-            })}
+            <ChatWindow chat={chat}/>
+            <ChatInput sendMessage={sendMessage} />
           </div>
-          <input
-            onChange={() => setText(messageRef.current.value)}
-            ref={messageRef}
-            className='mainPage_bottom_chat_send'
-            placeholder='Сообщение...'
-          />
-          <img
-            onClick={() => {
-              setMessages([...messages, message]);
-              setId(id + 1);
-            }}
-            src={sendMessageIcon}
-            alt='send'
-            className='mainPage_bottom_chat_sendImg'
-          />
         </div>
         <div className='mainPage_bottom_links'>
           <div className='mainPage_bottom_links_route'>

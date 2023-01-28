@@ -17,7 +17,8 @@ const Registration = () => {
   const [newEmail, setNewEmail] = React.useState("");
   const [newGender, setNewGender] = React.useState("");
 
-  const [token, setToken] = React.useState({});
+  const [token, setToken] = React.useState("");
+  const [userId, setUserId ] = React.useState("");
   const [login, setLogin] = React.useState(false);
   const [blockButton, setBlockButton] = React.useState(true);
   const navigate = useNavigate();
@@ -33,15 +34,19 @@ const Registration = () => {
   let submitLoggin = async () => {
     try {
       await axios
-        .post("/api/Auth/login", {
+        .post("https://localhost:44337/Auth/login", {
           nickName: nickName,
           password: password,
         })
         .then((res) => {
-          setToken(res.data);
+          setToken(res.data.result.accessToken);
+          setUserId(res.data.result.userId);
           if (res.data.isSuccess) {
             setLogin(true);
             navigate("/main");
+            localStorage.setItem('nickName', nickName);
+            localStorage.setItem('token', token);
+            localStorage.setItem('userId', userId);
           }
         });
     } catch (error) {
@@ -53,7 +58,7 @@ const Registration = () => {
   async function submitRegistration() {
     try {
       await axios
-        .post('/api/Auth/register', {
+        .post('https://localhost:44337/Auth/register', {
           nickName: newNickName,
           email: newEmail,
           password: newPassword,
@@ -154,7 +159,7 @@ const Registration = () => {
           <div className='reg_form_block_gender'>
             <button
               className={
-                newGender == "1"
+                newGender === "1"
                   ? "reg_form_block_gender_button boy boyActive"
                   : "reg_form_block_gender_button boy"
               }
@@ -163,7 +168,7 @@ const Registration = () => {
             </button>
             <button
               className={
-                newGender == "2"
+                newGender === "2"
                   ? "reg_form_block_gender_button girl girlActive"
                   : "reg_form_block_gender_button girl"
               }
