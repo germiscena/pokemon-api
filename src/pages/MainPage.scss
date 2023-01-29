@@ -37,6 +37,7 @@
         overflow-y: auto;
 
         &_single {
+          border-radius: 5px;
           display: flex;
           flex-direction: row;
           font-family: "Montserrat", sans-serif;

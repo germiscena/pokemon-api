@@ -4,13 +4,23 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 
 import ChatWindow from '../pages/Chat/ChatWindow';
 import ChatInput from '../pages/Chat/ChatInput';
+import ToastComponent from '../components/ToastComponent.jsx';
+
 
 const MainPage = () => {
+  const [ show, setShow ] = useState(false);
   const [ connection, setConnection ] = useState(null);
   const [ chat, setChat ] = useState([]);
   const latestChat = useRef(null);
-
   latestChat.current = chat;
+
+  const handleClick = () => {
+    setShow(true);
+    setTimeout(() => {
+      setShow(false);
+    }, 30000);
+  };
+
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -51,7 +61,6 @@ const MainPage = () => {
   }
 }
 
-
   return (
     <div className='mainPage'>
       <div className='mainPage_landscape' />
@@ -76,7 +85,8 @@ const MainPage = () => {
           <div className='mainPage_bottom_links_route'>
             <h3 className='mainPage_bottom_links_route_title'>ДЕЙСТВИЯ</h3>
             <div className='mainPage_bottom_links_route_points'>
-              <button className='mainPage_bottom_links_route_points_single'>Лечение</button>
+              <button className='mainPage_bottom_links_route_points_single' onClick={() => handleClick()}>Лечение</button>
+              {show && (<ToastComponent/>)}
               <button className='mainPage_bottom_links_route_points_single'>Прогулка</button>
             </div>
           </div>

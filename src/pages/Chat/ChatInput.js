@@ -28,12 +28,14 @@ const ChatInput = (props) => {
     
       React.useEffect(() => {
         thisTime();
+
         if(!localStorage.getItem('nickName')){
             setUserName('undefined');
         }
         else{
             setUserName(localStorage.getItem('nickName'));
         }
+        
       }, [d.minute()]);
 
     const onSubmit = (e) => {
