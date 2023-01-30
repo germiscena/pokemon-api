@@ -3,10 +3,17 @@ import "./Registration.scss";
 import pokemon from "../img/RegPok.png";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import ToastComponent from "../components/ToastComponent";
+import Loading from "./Loading";
 
 //create form registration with axios request
 
 const Registration = () => {
+  const [show, setShow] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const [okey, setOkey] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
   const [nickName, setNickName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loginBlock, setLoginBlock] = React.useState(true);
@@ -18,7 +25,7 @@ const Registration = () => {
   const [newGender, setNewGender] = React.useState("");
 
   const [token, setToken] = React.useState("");
-  const [userId, setUserId ] = React.useState("");
+  const [userId, setUserId] = React.useState("");
   const [login, setLogin] = React.useState(false);
   const [blockButton, setBlockButton] = React.useState(true);
   const navigate = useNavigate();
@@ -42,11 +49,6 @@ const Registration = () => {
           setToken(res.data.result.accessToken);
           setUserId(res.data.result.userId);
           if (res.data.isSuccess) {
-            setLogin(true);
-            navigate("/main");
-            localStorage.setItem('nickName', nickName);
-            localStorage.setItem('token', token);
-            localStorage.setItem('userId', userId);
           }
         });
     } catch (error) {
@@ -54,11 +56,28 @@ const Registration = () => {
       console.log(error);
     }
   };
-  
+
+  React.useEffect(() => {
+    if (userId) {
+      setOkey(true);
+      setText("Добро пожаловать, тренер!");
+      setShow(true);
+      setLogin(false);
+      setLoading(true);
+      localStorage.setItem("nickName", nickName);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId);
+      setTimeout(() => {
+        navigate("/main");
+        setLoading(false);
+      }, 3000);
+    }
+  }, [userId]);
   async function submitRegistration() {
+    console.log("click");
     try {
       await axios
-        .post('https://localhost:44337/Auth/register', {
+        .post("https://localhost:44337/Auth/register", {
           nickName: newNickName,
           email: newEmail,
           password: newPassword,
@@ -66,16 +85,26 @@ const Registration = () => {
         })
         .then((res) => {
           setToken(res.data);
-          if (res.data.isSuccess) {
-            setLogin(true);
-            navigate("/main");
-          }
         });
     } catch (err) {
       console.log(err, "ВОТ АШЫБКА");
     }
   }
-
+  React.useEffect(() => {
+    if (token) {
+      if (token.errorMessages) {
+        setOkey(false);
+        setText("Такой логин или электронная почта уже используется.");
+        setShow(true);
+      } else if (token.isSuccess) {
+        setOkey(true);
+        setText(
+          "Ваш аккаунт успешно создан! Вы можете войти в него, нажав на кнопку:'Войти как тренер'.",
+        );
+        setShow(true);
+      }
+    }
+  }, [token]);
   const onChangeRegInput = () => {
     setNewNickName(nameRef.current.value);
     setNewPassword(passRef.current.value);
@@ -113,7 +142,7 @@ const Registration = () => {
 
   return (
     <div className='reg'>
-      <div className={login ? "reg_info hidden" : "reg_info"}>
+      <div className={login || loading ? "reg_info hidden" : "reg_info"}>
         <p className='reg_info_words'>
           PokemonAPI - это дипломный проект, в виде браузерной игры про покемонов.
         </p>
@@ -122,7 +151,7 @@ const Registration = () => {
         </button>
         <img src={pokemon} alt='pokemon' className='reg_info_pokemon' />
       </div>
-      <div className={login ? "reg_form hidden" : "reg_form"}>
+      <div className={login || loading ? "reg_form hidden" : "reg_form"}>
         <div className='reg_form_block'>
           <div className='reg_form_block_input'>
             <label>Имя персонажа</label>
@@ -186,6 +215,9 @@ const Registration = () => {
           Пропустить
         </button>
       </div>
+      {show && (
+        <ToastComponent setShow={(inf) => setShow(inf)} show={show} text={text} isOkey={okey} />
+      )}
       {login && (
         <div className='reg_login'>
           <button className='reg_login_leave' onClick={() => setLogin(false)}>
@@ -214,6 +246,7 @@ const Registration = () => {
           </button>
         </div>
       )}
+      {loading && <Loading link={"/main"} />}
     </div>
   );
 };

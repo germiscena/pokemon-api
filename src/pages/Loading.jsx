@@ -3,11 +3,11 @@ import "./Loading.scss";
 import logo from "../logo.svg";
 import { useNavigate } from "react-router";
 
-const Loading = () => {
+const Loading = ({ link }) => {
   const navigate = useNavigate();
   React.useEffect(() => {
     setTimeout(() => {
-      navigate("/reg");
+      link ? navigate(link) : navigate("/reg");
     }, 3000);
   }, []);
   return (

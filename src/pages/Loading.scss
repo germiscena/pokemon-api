@@ -15,8 +15,11 @@
 }
 
 .Loading-header {
+  position: absolute;
+  left: 40%;
+  top: 30%;
   background-color: #fbe351;
-  min-height: 80vh;
+  // min-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;

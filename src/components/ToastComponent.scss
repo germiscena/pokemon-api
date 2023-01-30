@@ -9,18 +9,17 @@
   opacity: 0;
   &_form {
     width: 300px;
-
     border: 0.5px solid #000000;
     border-radius: 5px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     &_imgNotification {
       width: 52px;
       height: 52px;
       padding: 4px;
-      margin-right: 5px;
-      border-right: 1px solid black;
+      margin-left: 2px;
     }
     &_textNotification {
       font-family: "Montserrat";
@@ -28,7 +27,10 @@
       font-weight: 400;
       font-size: 14px;
       line-height: 21px;
+      margin: 0px;
+      padding: 5px;
       margin-left: 5px;
+      border-left: 1px solid black;
     }
     &_textNotificationBold {
       font-family: "Montserrat";

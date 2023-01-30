@@ -1,27 +1,30 @@
 import "./ToastComponent.scss";
 import React, { useState, useEffect, useRef } from "react";
 import notOkey from "../img/notOkey.svg";
+import okey from "../img/Okey.svg";
 
-const ToastComponent = ({ show }) => {
-  const [isVisible, setIsVisible] = useState(show);
-
+const ToastComponent = ({ show, text, isOkey, setShow }) => {
   useEffect(() => {
-    setIsVisible(show);
+    setShow(show);
   }, [show]);
 
   useEffect(() => {
     let timeoutId;
     if (show) {
-      timeoutId = setTimeout(() => setIsVisible(false), 130000);
+      timeoutId = setTimeout(() => setShow(false), 3000);
     }
     return () => clearTimeout(timeoutId);
   }, [show]);
 
   return (
-    <div className={show ? "toast" : "toast show"}>
+    <div className={show ? "toast show" : "toast"}>
       <div className='toast_form'>
-        <img src={notOkey} className='toast_form_imgNotification' />
-        <p className='toast_form_textNotification'>Your Pokémons are healed.</p>
+        {isOkey ? (
+          <img src={notOkey} className='toast_form_imgNotification' />
+        ) : (
+          <img src={okey} className='toast_form_imgNotification' />
+        )}
+        <p className='toast_form_textNotification'>{text}</p>
       </div>
     </div>
   );
