@@ -24,8 +24,12 @@ const Registration = () => {
   const [newEmail, setNewEmail] = React.useState("");
   const [newGender, setNewGender] = React.useState("");
 
-  const [token, setToken] = React.useState("");
   const [userId, setUserId] = React.useState("");
+  const [token, setToken] = React.useState("");
+  const [resfreshToken, setRefreshToken] = React.useState("");
+  const [userName, setUserName] = React.useState("");
+  const [roles, setRoles] = React.useState("");
+
   const [login, setLogin] = React.useState(false);
   const [blockButton, setBlockButton] = React.useState(true);
   const navigate = useNavigate();
@@ -46,8 +50,11 @@ const Registration = () => {
           password: password,
         })
         .then((res) => {
-          setToken(res.data.result.accessToken);
           setUserId(res.data.result.userId);
+          setToken(res.data.result.accessToken);
+          setRefreshToken(res.data.result.resfreshToken);
+          setUserName(res.data.result.nickName);
+          setRoles(res.data.result.roles);
           if (res.data.isSuccess) {
           }
         });
