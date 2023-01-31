@@ -24,11 +24,12 @@
 
     &_chat {
       width: 640px;
+      min-width: 350px;
       height: 250px;
       background-color: #f6f2f2;
 
       &_messages {
-        height: 190px;
+        height: 230px;
         margin: 10px;
         background-color: #f6f2f2;
         padding-top: 5px;
@@ -109,7 +110,8 @@
           margin-right: 100px;
           align-items: center;
           &_single {
-            width: 248px;
+            width: 200px;
+            min-width: 140px;
             height: 46px;
             border-radius: 20px;
             border: none;

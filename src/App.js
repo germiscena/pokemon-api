@@ -9,8 +9,9 @@ import Registration from "./pages/Registration.jsx";
 import AppContext from "./context.js";
 function App() {
   const [pokedexOpen, setPokedexOpen] = React.useState(false);
+  const [wildBattles, setWildBattles] = React.useState(false);
   return (
-    <AppContext.Provider value={{ pokedexOpen, setPokedexOpen }}>
+    <AppContext.Provider value={{ pokedexOpen, setPokedexOpen, wildBattles, setWildBattles }}>
       <MainComponent>
         <Routes>
           <Route path='/' element={<Loading />} />

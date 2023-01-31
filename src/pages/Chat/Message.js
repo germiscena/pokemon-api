@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
+import "../MainPage.scss";
 
 const Message = (props) => (
-    <div className='mainPage_bottom_chat_messages_single'>
-        <p className='mainPage_bottom_chat_messages_single_user'>{props.time}:</p>
-        <p className='mainPage_bottom_chat_messages_single_user'>{props.userName}:</p>
-        <p className='mainPage_bottom_chat_messages_single_message'>{props.message}</p>
-    </div>
+  <div className='mainPage_bottom_chat_messages_single'>
+    <p className='mainPage_bottom_chat_messages_single_time'>{props.time}:</p>
+    <p className='mainPage_bottom_chat_messages_single_user'>{props.userName}:</p>
+    <p className='mainPage_bottom_chat_messages_single_message'>{props.message}</p>
+  </div>
 );
 
 export default Message;

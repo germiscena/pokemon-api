@@ -6,13 +6,58 @@ import groups from "../img/groups.svg";
 import backpack from "../img/business_center.svg";
 import pets from "../img/pets.svg";
 import wild from "../img/wild.svg";
-import { Link, useLocation } from "react-router-dom";
+import wildOn from "../img/wildOn.svg";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../context";
 import Pokedex from "./Pokedex";
+import FindBattle from "./FindBattle";
+import axios from "axios";
 
 const MainComponent = ({ children }) => {
   const location = useLocation();
-  const { pokedexOpen, setPokedexOpen } = React.useContext(AppContext);
+  const navigate = useNavigate();
+  const { pokedexOpen, setPokedexOpen, wildBattles, setWildBattles } = React.useContext(AppContext);
+  const [findBattle, setFindBattle] = React.useState(false);
+  //battleAnswer - ответ из модалки
+  const [battleAnswer, setBattleAnswer] = React.useState("");
+  //myPokemons - запрос на получение покемонов моих
+  const [myPokemons, setMyPokemons] = React.useState({});
+  //battleInfo - запрос на получение данных боя
+  const [battleInfo, setBattleInfo] = React.useState({});
+  React.useEffect(() => {
+    if (wildBattles == true) {
+      setTimeout(() => {
+        setFindBattle(true);
+      }, 2000);
+    }
+  }, [wildBattles]);
+  const userId = localStorage.getItem("userId");
+  async function getPokemons() {
+    let res = await axios
+      .get("https://localhost:44337/Pokemon/get-user-pokemons?userId=" + userId)
+      .then((res) => setMyPokemons(res.data[0]));
+  }
+  async function getBattleInfo() {
+    let res = await axios
+      .post("https://localhost:44337/Battle/create-local-battle?pokemonId=" + myPokemons.id)
+      .then((res) => {
+        setBattleInfo(res.data);
+        localStorage.setItem("battleId", res.data.id);
+      });
+  }
+  console.log(myPokemons);
+  console.log(battleInfo);
+  React.useEffect(() => {
+    if (battleAnswer == "accept") {
+      getPokemons();
+    }
+  }, [battleAnswer]);
+
+  React.useEffect(() => {
+    if (myPokemons.id) {
+      getBattleInfo();
+    }
+  }, [myPokemons]);
 
   return (
     <div className='main'>
@@ -28,7 +73,21 @@ const MainComponent = ({ children }) => {
           </div>
           <div className='main_borders right'>
             <Link to='/main'>
-              <img className='main_borders_image' src={wild} alt='wild pokemons' />
+              {wildBattles ? (
+                <img
+                  className='main_borders_image'
+                  onClick={() => setWildBattles(!wildBattles)}
+                  src={wildOn}
+                  alt='wild pokemons'
+                />
+              ) : (
+                <img
+                  className='main_borders_image'
+                  onClick={() => setWildBattles(!wildBattles)}
+                  src={wild}
+                  alt='wild pokemons'
+                />
+              )}
             </Link>
             <img
               onClick={() => setPokedexOpen(true)}
@@ -43,6 +102,13 @@ const MainComponent = ({ children }) => {
         </div>
       )}
       {children}
+      {findBattle && (
+        <FindBattle
+          setWildBattles={(inf) => setWildBattles(inf)}
+          setFindBattle={(inf) => setFindBattle(inf)}
+          setBattleAnswer={(inf) => setBattleAnswer(inf)}
+        />
+      )}
       {pokedexOpen && <Pokedex setClose={() => setPokedexOpen(false)} />}
     </div>
   );

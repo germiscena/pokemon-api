@@ -1,0 +1,46 @@
+.findBattle {
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  top: 110px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #fbe351;
+  border: 2px solid #3c3c3c;
+  border-radius: 15px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &_title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 30px;
+    text-align: center;
+    color: #3c3c3c;
+  }
+  &_img {
+    margin-top: 10px;
+    width: 450px;
+    border-radius: 20px;
+    height: auto;
+    image-resolution: 20;
+  }
+  &_buttons {
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    &_button {
+      width: 150px;
+      height: 50px;
+      background-color: #3c3c3c;
+      border-radius: 12px;
+      color: #fbe351;
+      font-family: "Montserrat", sans-serif;
+      font-size: 28px;
+      text-align: center;
+      border: none;
+    }
+  }
+}
