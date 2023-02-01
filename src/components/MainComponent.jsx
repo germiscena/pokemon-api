@@ -12,11 +12,19 @@ import AppContext from "../context";
 import Pokedex from "./Pokedex";
 import FindBattle from "./FindBattle";
 import axios from "axios";
+import MyPokemons from "./MyPokemons";
 
 const MainComponent = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { pokedexOpen, setPokedexOpen, wildBattles, setWildBattles } = React.useContext(AppContext);
+  const {
+    pokedexOpen,
+    setPokedexOpen,
+    wildBattles,
+    setWildBattles,
+    backpackPokemons,
+    setBackpackPokemons,
+  } = React.useContext(AppContext);
   const [findBattle, setFindBattle] = React.useState(false);
   //battleAnswer - ответ из модалки
   const [battleAnswer, setBattleAnswer] = React.useState("");
@@ -66,7 +74,12 @@ const MainComponent = ({ children }) => {
       {location.pathname !== "/reg" && (
         <div>
           <div className='main_borders left'>
-            <img className='main_borders_image' src={pets} alt='pokemons' />
+            <img
+              className='main_borders_image'
+              onClick={() => setBackpackPokemons(true)}
+              src={pets}
+              alt='pokemons'
+            />
             <img className='main_borders_image' src={backpack} alt='inventory' />
             <img className='main_borders_image' src={groups} alt='players' />
           </div>
@@ -109,6 +122,7 @@ const MainComponent = ({ children }) => {
         />
       )}
       {pokedexOpen && <Pokedex setClose={() => setPokedexOpen(false)} />}
+      {backpackPokemons && <MyPokemons setClose={() => setBackpackPokemons(false)} />}
     </div>
   );
 };

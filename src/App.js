@@ -10,8 +10,17 @@ import AppContext from "./context.js";
 function App() {
   const [pokedexOpen, setPokedexOpen] = React.useState(false);
   const [wildBattles, setWildBattles] = React.useState(false);
+  const [backpackPokemons, setBackpackPokemons] = React.useState(false);
   return (
-    <AppContext.Provider value={{ pokedexOpen, setPokedexOpen, wildBattles, setWildBattles }}>
+    <AppContext.Provider
+      value={{
+        pokedexOpen,
+        setPokedexOpen,
+        wildBattles,
+        setWildBattles,
+        backpackPokemons,
+        setBackpackPokemons,
+      }}>
       <MainComponent>
         <Routes>
           <Route path='/' element={<Loading />} />
