@@ -9,13 +9,14 @@ import reload from "../img/reload.svg";
 import backpack from "../img/backpack.svg";
 import swords from "../img/swords.svg";
 import axios from "axios";
+import { useLocation } from "react-router";
 
 const BattlePage = () => {
-  const [battle, setBattle] = React.useState([]);
-  const [turn, setTurn] = React.useState([]);
-  const [round, setRound] = React.useState(0);
-  const [myHp, setMyHp] = React.useState(100);
-  const [enemyHp, setEnemyHp] = React.useState(100);
+  const location = useLocation();
+  const [battleState, setBattleState] = React.useState(location.state);
+  const [myPokemon, setMyPokemon] = React.useState({});
+  const [enemyPokemon, setEnemyPokemon] = React.useState({});
+  console.log(battleState);
   function typeSelection(name) {
     if (name == "ground") {
       return ground;
@@ -30,117 +31,72 @@ const BattlePage = () => {
       return earth;
     }
   }
-
-  async function fetchTurns() {
-    const turn = await axios.get("https://635b02f16f97ae73a63b8527.mockapi.io/turns");
-    setTurn(turn.data);
+  console.log("MY", myPokemon);
+  console.log("ENEMY", enemyPokemon);
+  async function fetchPokeInfo() {
+    await axios
+      .get("https://localhost:44337/Pokemon/get-pokemon?Id=" + battleState.attackPokemon)
+      .then((res) => {
+        setMyPokemon(res.data);
+      });
+    await axios
+      .get("https://localhost:44337/Pokemon/get-pokemon?Id=" + battleState.defendingPokemon)
+      .then((res) => {
+        setEnemyPokemon(res.data);
+      });
   }
-
-  async function takeDamage(myHp, myDmg, enemyHp, enemyDmg) {
-    await axios.post("https://635b02f16f97ae73a63b8527.mockapi.io/battle", {
-      myHp: myHp - enemyDmg <= 0 ? 0 : myHp - enemyDmg,
-      enemyHp: enemyHp - myDmg <= 0 ? 0 : enemyHp - myDmg,
-    });
-    setMyHp(myHp - enemyDmg <= 0 ? 0 : myHp - enemyDmg);
-    setEnemyHp(enemyHp - myDmg <= 0 ? 0 : enemyHp - myDmg);
-  }
-  async function fetchBattle() {
-    const data = await axios.get("https://635b02f16f97ae73a63b8527.mockapi.io/battle");
-    setBattle(data.data);
-  }
-
-  async function createTurn(myAttack, myDmg, myHp, enemyAttack, enemyDmg, enemyHp) {
-    await axios.post("https://635b02f16f97ae73a63b8527.mockapi.io/turns", {
-      turn: round,
-      myAttack: myAttack,
-      myDamage: myDmg,
-      myDescription: "Покемон начал очень мощно топать своими ногами",
-      enemyAttack: enemyAttack,
-      enemyDamage: enemyDmg,
-      enemyDescription: "Покемон сносит таранит соперника своим лбом",
-    });
-
-    takeDamage(myHp, myDmg, enemyHp, enemyDmg);
-    fetchBattle();
-    fetchTurns();
-    setRound(round + 1);
-  }
-  React.useEffect(() => {
-    if (myHp == 0 || enemyHp == 0) {
-      fetchBattle();
-      alert(`THE WINNER IS ${myHp == 0 ? battle[0].enemyName : battle[0].name}`);
-    }
-  }, [myHp, enemyHp]);
-
-  async function clearBattle(num) {
-    for (let i = 1; i <= num; ) {
-      await axios.delete(`https://635b02f16f97ae73a63b8527.mockapi.io/turns/${i}`);
-      i = i + 1;
-    }
-    for (let i = 2; i <= num + 1; ) {
-      await axios.delete(`https://635b02f16f97ae73a63b8527.mockapi.io/battle/${i}`);
-      i = i + 1;
-    }
-  }
-
-  async function restartBattle(num) {
-    await clearBattle(num);
-    setMyHp(100);
-    setEnemyHp(100);
-    setRound(0);
-    fetchTurns();
-    fetchBattle();
-  }
-
-  React.useEffect(() => {
-    fetchBattle();
-    fetchTurns();
+  React.useState(() => {
+    fetchPokeInfo();
   }, []);
 
   return (
     <>
-      {battle.length !== 0 ? (
+      {battleState ? (
         <div className='battle'>
           <div className='battle_information'>
             <div className='battle_information_pokemon'>
               <img
                 className='battle_information_pokemon_image'
-                src={battle[0].image}
-                alt={battle[0].name}
+                src={myPokemon.image}
+                alt={myPokemon.name}
               />
               <div className='battle_information_pokemon_props'>
                 <p className='battle_information_pokemon_props_name'>
-                  # {battle[0].myId} {battle[0].name}
+                  # {myPokemon.pokemonRecordId} {myPokemon.name}
                 </p>
                 <p className='battle_information_pokemon_props_level'>39</p>
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${myHp}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${myPokemon.currentHealth}%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
-                  background: `linear-gradient(to right, #45ebeb ${battle[0].exp}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #45ebeb ${
+                    myPokemon.experience / 10
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
               />
             </div>
             <div className='battle_information_center'>
               <div className='battle_information_center_round'>
-                <h4 className='battle_information_center_round_number'>Раунд {round}</h4>
+                <h4 className='battle_information_center_round_number'>
+                  Раунд {battleState.queue}
+                </h4>
               </div>
               <div className='battle_information_center_scroll'>
                 <div className='battle_information_center_scroll_firstTurn'>
                   <div className='battle_information_center_scroll_firstTurn_start'>
                     <img
-                      src={battle[0].image}
-                      alt={battle[0].name}
+                      src={myPokemon.image}
+                      alt={myPokemon.name}
                       className='battle_information_center_scroll_turn_attack_pokemon_image'
                     />
                     <h3 className='battle_information_center_scroll_turn_attack_pokemon_info'>
-                      # {battle[0].id} {battle[0].name}
+                      # {myPokemon.pokemonRecordId} {myPokemon.name}
                     </h3>
                     <span
                       style={{
@@ -155,12 +111,12 @@ const BattlePage = () => {
                   </div>
                   <div className='battle_information_center_scroll_firstTurn_start'>
                     <img
-                      src={battle[0].enemyImage}
-                      alt={battle[0].enemyName}
+                      src={enemyPokemon.image}
+                      alt={enemyPokemon.name}
                       className='battle_information_center_scroll_turn_attack_pokemon_image'
                     />
                     <h3 className='battle_information_center_scroll_turn_attack_pokemon_info'>
-                      # {battle[0].enemyId} {battle[0].enemyName}
+                      # {enemyPokemon.pokemonRecordId} {enemyPokemon.name}
                     </h3>
                     <span
                       style={{
@@ -174,18 +130,18 @@ const BattlePage = () => {
                     </span>
                   </div>
                 </div>
-                {turn.map((item) => {
+                {/* {turn.map((item) => {
                   return (
                     <div key={item.id} className='battle_information_center_scroll_turn'>
                       <div className='battle_information_center_scroll_turn_attack'>
                         <div className='battle_information_center_scroll_turn_attack_pokemon'>
                           <img
-                            src={battle[0].enemyImage}
-                            alt={battle[0].enemyName}
+                            src={enemyPokemon.Image}
+                            alt={enemyPokemon.Name}
                             className='battle_information_center_scroll_turn_attack_pokemon_image'
                           />
                           <h3 className='battle_information_center_scroll_turn_attack_pokemon_info'>
-                            # {battle[0].enemyId} {battle[0].enemyName}
+                            # {enemyPokemon.Id} {enemyPokemon.Name}
                           </h3>
                           <span style={{ textDecoration: "none" }}>→</span>
                           <span
@@ -237,37 +193,39 @@ const BattlePage = () => {
                       </div>
                     </div>
                   );
-                })}
+                })} */}
               </div>
             </div>
             <div className='battle_information_pokemon'>
               <img
                 className='battle_information_pokemon_image'
-                src={battle[0].enemyImage}
-                alt={battle[0].enemyName}
+                src={enemyPokemon.image}
+                alt={enemyPokemon.name}
               />
               <div className='battle_information_pokemon_props'>
                 <p className='battle_information_pokemon_props_name'>
-                  # {battle[0].enemyId} {battle[0].enemyName}
+                  # {enemyPokemon.pokemonRecordId} {enemyPokemon.name}
                 </p>
                 <p className='battle_information_pokemon_props_level'>39</p>
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${enemyHp}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${enemyPokemon.currentHealth}%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
-                  background: `linear-gradient(to right, #45ebeb ${battle[0].enemyExp}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #45ebeb ${
+                    enemyPokemon.experience / 10
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
               />
             </div>
           </div>
-          <div className='battle_attacks'>
-            {myHp == 0 || enemyHp == 0
+          {/* <div className='battle_attacks'>
+            {myPokemon.hp == 0 || enemyPokemon.hp == 0
               ? ""
               : battle[0].atk.map((item) => {
                   return (
@@ -278,7 +236,7 @@ const BattlePage = () => {
                           item.dmg,
                           myHp,
                           "ГНЕВ ДРАКОНА",
-                          battle[0].enemyDmg,
+                          enemyPokemon.Dmg,
                           enemyHp,
                         )
                       }
@@ -298,12 +256,12 @@ const BattlePage = () => {
                     </div>
                   );
                 })}
-          </div>
+          </div> */}
           <div className='battle_buttons'>
             <div className='battle_buttons_button' style={{ cursor: "pointer" }}>
               <img
                 className='battle_buttons_button_image'
-                onClick={() => restartBattle(turn.length)}
+                // onClick={() => restartBattle(turn.length)}
                 src={reload}
                 alt='reload'
               />

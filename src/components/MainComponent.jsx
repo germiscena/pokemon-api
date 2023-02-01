@@ -7,7 +7,7 @@ import backpack from "../img/business_center.svg";
 import pets from "../img/pets.svg";
 import wild from "../img/wild.svg";
 import wildOn from "../img/wildOn.svg";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AppContext from "../context";
 import Pokedex from "./Pokedex";
 import FindBattle from "./FindBattle";
@@ -43,10 +43,9 @@ const MainComponent = ({ children }) => {
       .then((res) => {
         setBattleInfo(res.data);
         localStorage.setItem("battleId", res.data.id);
+        navigate("/battle", { state: res.data });
       });
   }
-  console.log(myPokemons);
-  console.log(battleInfo);
   React.useEffect(() => {
     if (battleAnswer == "accept") {
       getPokemons();
