@@ -10,6 +10,7 @@ import searchIcon from "../img/searchIcon.svg";
 import rightArrow from "../img/rightArrow.svg";
 import leftArrow from "../img/leftArrow.svg";
 import Graveler from "../img/Graveler.png";
+import evoArrow from "../img/evoArrow.svg";
 
 const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState({});
@@ -91,7 +92,7 @@ const Pokedex = ({ setClose }) => {
                 />
                 <p className='pokedex_evolutions_block_evo_name'>{pokemon.name}</p>
               </div>
-              <img className='pokedex_evolutions_block_arrow' src={"evoArrow"} alt='evo' />
+              <img className='pokedex_evolutions_block_arrow' src={evoArrow} alt='evo' />
               <div className='pokedex_evolutions_block_evo'>
                 <img
                   className='pokedex_evolutions_block_evo_pic'
@@ -100,7 +101,7 @@ const Pokedex = ({ setClose }) => {
                 />
                 <p className='pokedex_evolutions_block_evo_name'>Ивизавр</p>
               </div>
-              <img className='pokedex_evolutions_block_arrow' src={"evoArrow"} alt='evo' />
+              <img className='pokedex_evolutions_block_arrow' src={evoArrow} alt='evo' />
               <div className='pokedex_evolutions_block_evo'>
                 <img
                   className='pokedex_evolutions_block_evo_pic'
