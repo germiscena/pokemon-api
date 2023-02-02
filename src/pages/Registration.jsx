@@ -74,6 +74,8 @@ const Registration = () => {
       localStorage.setItem("nickName", nickName);
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("refreshToken", resfreshToken);
+      localStorage.setItem("role", roles);
       setTimeout(() => {
         navigate("/main");
         setLoading(false);

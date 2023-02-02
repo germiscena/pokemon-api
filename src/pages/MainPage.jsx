@@ -12,6 +12,7 @@ const MainPage = () => {
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
+  let token = localStorage.getItem('token');
 
   const latestChat = useRef(null);
   latestChat.current = chat;
@@ -25,7 +26,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:44337/chat")
+      .withUrl("https://localhost:44337/chat", { accessTokenFactory: () => token })
       .withAutomaticReconnect()
       .build();
 
