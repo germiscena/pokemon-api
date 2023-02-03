@@ -5,6 +5,8 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import ChatWindow from "../pages/Chat/ChatWindow";
 import ChatInput from "../pages/Chat/ChatInput";
 import ToastComponent from "../components/ToastComponent.jsx";
+import axiosInstance from "../config/axiosInstance";
+import { API_URL } from "../.env";
 
 const MainPage = () => {
   const [welcome, setWelcome] = useState(false);
@@ -12,12 +14,18 @@ const MainPage = () => {
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
+  const [userMoney, setUserMoney ] = useState(0);
   let token = localStorage.getItem('token');
 
   const latestChat = useRef(null);
   latestChat.current = chat;
 
+  async function healingPokemons(){
+    let res = await axiosInstance.put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem('userId'))
+      .then(setUserMoney(res.data));
+  }
   const handleClick = () => {
+    healingPokemons();
     setShow(true);
     setTimeout(() => {
       setShow(false);
@@ -26,7 +34,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:44337/chat", { accessTokenFactory: () => token })
+      .withUrl(`${API_URL}/chat`, { accessTokenFactory: () => token })
       .withAutomaticReconnect()
       .build();
 

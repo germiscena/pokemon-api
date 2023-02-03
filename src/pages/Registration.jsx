@@ -74,7 +74,7 @@ const Registration = () => {
       localStorage.setItem("nickName", nickName);
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("refreshToken", resfreshToken);
+      localStorage.setItem("refresh_token", resfreshToken);
       localStorage.setItem("role", roles);
       setTimeout(() => {
         navigate("/main");
@@ -153,7 +153,7 @@ const Registration = () => {
     <div className='reg'>
       <div className={login || loading ? "reg_info hidden" : "reg_info"}>
         <p className='reg_info_words'>
-          PokemonAPI - это дипломный проект, в виде браузерной игры про покемонов.
+          Pokemon World - это дипломный проект, в виде браузерной игры про покемонов.
         </p>
         <button onClick={() => setLogin(true)} className='reg_info_login'>
           Войти как тренер
@@ -173,7 +173,7 @@ const Registration = () => {
           <div className='reg_form_block_input'>
             <label>Пароль</label>
             <input
-              type='text'
+              type='password'
               onChange={() => onChangeRegInput()}
               ref={passRef}
               placeholder='Пароль'></input>
@@ -181,7 +181,7 @@ const Registration = () => {
           <div className='reg_form_block_input'>
             <label>Пароль ещё раз</label>
             <input
-              type='text'
+              type='password'
               onChange={() => onChangeRegInput()}
               ref={pass2Ref}
               placeholder='Пароль ещё раз'></input>
@@ -243,7 +243,7 @@ const Registration = () => {
           <div className='reg_login_input'>
             <label>Пароль</label>
             <input
-              type='text'
+              type='password'
               ref={loginPass}
               placeholder='Пароль'
               onChange={() => onChangeLogInput()}></input>

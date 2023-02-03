@@ -1,6 +1,6 @@
 import React from "react";
 import "./Loading.scss";
-import logo from "../logo.svg";
+import logo from "../img/running_pikachu.gif";
 import { useNavigate } from "react-router";
 
 const Loading = ({ link }) => {
@@ -8,13 +8,13 @@ const Loading = ({ link }) => {
   React.useEffect(() => {
     setTimeout(() => {
       link ? navigate(link) : navigate("/reg");
-    }, 3000);
+    }, 1000);
   }, []);
   return (
     <div className='Loading'>
       <header className='Loading-header'>
         <img src={logo} className='Loading-logo' alt='logo' />
-        <p>LOADING . . .</p>
+        <p className='Loading-text'>GAME WORLD LOADING . . .</p>
       </header>
     </div>
   );

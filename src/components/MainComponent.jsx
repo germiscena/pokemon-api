@@ -13,6 +13,8 @@ import Pokedex from "./Pokedex";
 import FindBattle from "./FindBattle";
 import axios from "axios";
 import MyPokemons from "./MyPokemons";
+import axiosInstance from "../config/axiosInstance";
+import { API_URL } from "../.env";
 
 const MainComponent = ({ children }) => {
   const location = useLocation();
@@ -32,22 +34,23 @@ const MainComponent = ({ children }) => {
   const [myPokemons, setMyPokemons] = React.useState({});
   //battleInfo - запрос на получение данных боя
   const [battleInfo, setBattleInfo] = React.useState({});
+  const randomTime = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
   React.useEffect(() => {
     if (wildBattles == true) {
       setTimeout(() => {
         setFindBattle(true);
-      }, 2000);
+      }, randomTime);
     }
   }, [wildBattles]);
   const userId = localStorage.getItem("userId");
   async function getPokemons() {
-    let res = await axios
-      .get("https://localhost:44337/Pokemon/get-user-pokemons?userId=" + userId)
+    let res = await axiosInstance
+      .get(`${API_URL}/Pokemon/get-user-pokemons?userId=` + userId)
       .then((res) => setMyPokemons(res.data[0]));
   }
   async function getBattleInfo() {
-    let res = await axios
-      .post("https://localhost:44337/Battle/create-local-battle?pokemonId=" + myPokemons.id)
+    let res = await axiosInstance
+      .post(`${API_URL}/Battle/create-local-battle?pokemonId=` + myPokemons.id)
       .then((res) => {
         setBattleInfo(res.data);
         localStorage.setItem("battleId", res.data.id);
@@ -69,7 +72,7 @@ const MainComponent = ({ children }) => {
   return (
     <div className='main'>
       <div className='main_header'>
-        <p className='main_header_title'>POKEMONAPI</p>
+        <p className='main_header_title'>Pockemon World</p>
       </div>
       {location.pathname !== "/reg" && (
         <div>

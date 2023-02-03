@@ -2,9 +2,21 @@ import React from "react";
 import AppContext from "../context";
 import "./MyPokemons.scss";
 import heleolisk from "../img/Heleolisk.png";
+import axios from "axios";
+import { API_URL } from "../.env";
+import axiosInstance from "../config/axiosInstance";
 
 const MyPokemons = () => {
   const { backpackPokemons, setBackpackPokemons } = React.useContext(AppContext);
+  const {pokemons, setPokemons } = React.useState([]);
+  async function getPokemons() {
+    let data = await axiosInstance.get(`${API_URL}/Pokemon/get-user-pokemons?userId=${localStorage.getItem(`userId`)}`);
+    setPokemons(data.data);
+  }
+  React.useEffect(() => {
+    getPokemons();
+    console.log("hello");
+  }, []);
   return (
     <div className='myPokemons'>
       <div className='myPokemons_inside'>
@@ -16,7 +28,7 @@ const MyPokemons = () => {
               alt='pokemon'
               className='myPokemons_inside_pokemons_single_image'
             />
-            <p className='myPokemons_inside_pokemons_single_name'>#695 Гелиолиск</p>
+            <p className='myPokemons_inside_pokemons_single_name'>#00{pokemons[0].pokemonRecordId} {pokemons[0].name}</p>
             <div className='myPokemons_inside_pokemons_single_health' />
             <div className='myPokemons_inside_pokemons_single_exp' />
           </div>

@@ -11,12 +11,14 @@ import rightArrow from "../img/rightArrow.svg";
 import leftArrow from "../img/leftArrow.svg";
 import Graveler from "../img/Graveler.png";
 import evoArrow from "../img/evoArrow.svg";
+import { API_URL } from "../.env";
+import axiosInstance from "../config/axiosInstance";
 
 const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState({});
   const [pokemonId, setPokemonId] = React.useState(2);
   async function getPokemon() {
-    let data = await axios.get(`https://localhost:44337/Pokedex/pokemonId?id=${pokemonId}`);
+    let data = await axiosInstance.get(`${API_URL}/Pokedex/pokemonId?id=${pokemonId}`);
     setPokemon(data.data);
   }
   React.useEffect(() => {

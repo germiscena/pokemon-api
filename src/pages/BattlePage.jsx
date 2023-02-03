@@ -10,6 +10,9 @@ import backpack from "../img/backpack.svg";
 import swords from "../img/swords.svg";
 import axios from "axios";
 import { useLocation } from "react-router";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { API_URL } from "../.env";
+import axiosInstance from "../config/axiosInstance";
 
 const BattlePage = () => {
   const location = useLocation();
@@ -17,6 +20,31 @@ const BattlePage = () => {
   const [myPokemon, setMyPokemon] = React.useState({});
   const [enemyPokemon, setEnemyPokemon] = React.useState({});
   console.log(battleState);
+  const [connection, setConnection] = React.useState(null);
+  
+
+
+  React.useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem('token') })
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  React.useEffect(() => {
+    connection.start().then(function () {
+      console.log("Connected to the game hub");
+    }).catch(function (err) {
+      return console.error(err.toString());
+    });
+
+    connection.invoke("joinGroup", battleState.id).catch(function (err) {
+      return console.error(err.toString());
+    });
+  }, [connection]);
+  
   function typeSelection(name) {
     if (name == "ground") {
       return ground;
@@ -34,13 +62,13 @@ const BattlePage = () => {
   console.log("MY", myPokemon);
   console.log("ENEMY", enemyPokemon);
   async function fetchPokeInfo() {
-    await axios
-      .get("https://localhost:44337/Pokemon/get-pokemon?Id=" + battleState.attackPokemon)
+    await axiosInstance
+      .get(`${API_URL}/Pokemon/get-pokemon-ability-and-category?id=` + battleState.attackPokemon)
       .then((res) => {
         setMyPokemon(res.data);
       });
-    await axios
-      .get("https://localhost:44337/Pokemon/get-pokemon?Id=" + battleState.defendingPokemon)
+    await axiosInstance
+      .get(`${API_URL}/Pokemon/get-pokemon-ability-and-category?id=` + battleState.defendingPokemon)
       .then((res) => {
         setEnemyPokemon(res.data);
       });

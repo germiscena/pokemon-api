@@ -4,21 +4,17 @@
 }
 
 .Loading-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .Loading-logo {
-    animation: Loading-logo-spin infinite 3s alternate;
-  }
-}
+
 
 .Loading-header {
   position: absolute;
   left: 40%;
   top: 30%;
-  background-color: #fbe351;
+  //background-color: #fbe351;
   // min-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -28,16 +24,11 @@
   font-weight: 900;
   color: black;
 }
+.Loading-text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+}
 
 .Loading-link {
   color: #61dafb;
-}
-
-@keyframes Loading-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
