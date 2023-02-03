@@ -1,7 +1,6 @@
 import React from "react";
 import "./Pokedex.scss";
 import close from "../img/closePokedex.svg";
-import axios from "axios";
 import AppContext from "../context";
 import defense from "../img/defense.svg";
 import attack from "../img/attack.svg";
@@ -9,7 +8,6 @@ import health from "../img/health.svg";
 import searchIcon from "../img/searchIcon.svg";
 import rightArrow from "../img/rightArrow.svg";
 import leftArrow from "../img/leftArrow.svg";
-import Graveler from "../img/Graveler.png";
 import evoArrow from "../img/evoArrow.svg";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
@@ -26,12 +24,14 @@ const Pokedex = ({ setClose }) => {
   }, []);
   const { pokedexOpen } = React.useContext(AppContext);
   function nextPokemon() {
-    pokemonId == 9 ? setPokemonId(0) : setPokemonId(pokemonId + 1);
+    pokemonId == 3 ? setPokemonId(1) : setPokemonId(pokemonId + 1);
+    console.log(pokemonId);
     getPokemon();
   }
 
   function prevPokemon() {
-    pokemonId == 0 ? setPokemonId(9) : setPokemonId(pokemonId - 1);
+    pokemonId == 0 ? setPokemonId(1) : setPokemonId(pokemonId - 1);
+    console.log(pokemonId);
     getPokemon();
   }
   return (
@@ -47,10 +47,11 @@ const Pokedex = ({ setClose }) => {
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
               <img src={pokemon.mainUrl} alt='pokemon' className='pokedex_pokemon_image_view' />
+              <p>{pokemon.category}</p>
             </div>
             <div className='pokedex_pokemon_info'>
               <h1 className='pokedex_pokemon_info_name'>
-                {"#00" + pokemon.pokedexId + " " + pokemon.name}
+                {"#00" + pokemon.id + " " + pokemon.name}
               </h1>
               <div className='pokedex_pokemon_info_stats'>
                 <div className='pokedex_pokemon_info_stats_single'>
