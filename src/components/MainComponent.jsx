@@ -72,7 +72,7 @@ const MainComponent = ({ children }) => {
   return (
     <div className='main'>
       <div className='main_header'>
-        <p className='main_header_title'>Pockemon World</p>
+        <p className='main_header_title'>Pokemon World</p>
       </div>
       {location.pathname !== "/reg" && (
         <div>
