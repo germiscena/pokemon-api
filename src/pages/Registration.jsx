@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import ToastComponent from "../components/ToastComponent";
 import Loading from "./Loading";
+import { API_URL } from "../.env";
 
 //create form registration with axios request
 
@@ -45,7 +46,7 @@ const Registration = () => {
   let submitLoggin = async () => {
     try {
       await axios
-        .post("https://localhost:44337/Auth/login", {
+        .post(`${API_URL}/Auth/login`, {
           nickName: nickName,
           password: password,
         })
@@ -55,8 +56,6 @@ const Registration = () => {
           setRefreshToken(res.data.result.resfreshToken);
           setUserName(res.data.result.nickName);
           setRoles(res.data.result.roles);
-          if (res.data.isSuccess) {
-          }
         });
     } catch (error) {
       console.log("pizdec");
@@ -86,7 +85,7 @@ const Registration = () => {
     console.log("click");
     try {
       await axios
-        .post("https://localhost:44337/Auth/register", {
+        .post(`${API_URL}}/Auth/register`, {
           nickName: newNickName,
           email: newEmail,
           password: newPassword,

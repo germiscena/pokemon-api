@@ -58,7 +58,7 @@
         height: 240px;
         margin: 10px;
         padding: 5px;
-        border: 2px solid #9b9b9b;
+
         border-radius: 5px;
       }
       &_type {
@@ -80,12 +80,14 @@
       width: 100%;
       margin-right: 10px;
       &_name {
-        font-size: 25px;
-        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+        font-family: 'Montserrat';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 40px;
         line-height: 0;
         font-weight: 500;
         text-align: center;
-        color: #9b9b9b;
+        color: black;
       }
 
       &_stats {
@@ -117,10 +119,12 @@
       &_description {
         margin-left: 15px;
         width: auto;
-        font-size: 16px;
         line-height: 20px;
-        color: #9b9b9b;
-        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+        color: black;
+        font-family: 'Montserrat';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
       }
     }
   }
@@ -174,7 +178,7 @@
           margin-right: 10px;
           font-size: 16px;
           font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-          color: #9b9b9b;
+          color: black;
           font-weight: 600;
         }
         &_pic {

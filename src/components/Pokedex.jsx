@@ -14,7 +14,7 @@ import axiosInstance from "../config/axiosInstance";
 
 const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState({});
-  const [pokemonId, setPokemonId] = React.useState(2);
+  const [pokemonId, setPokemonId] = React.useState(1);
   async function getPokemon() {
     let data = await axiosInstance.get(`${API_URL}/Pokedex/pokemonId?id=${pokemonId}`);
     setPokemon(data.data);
@@ -24,7 +24,7 @@ const Pokedex = ({ setClose }) => {
   }, []);
   const { pokedexOpen } = React.useContext(AppContext);
   function nextPokemon() {
-    pokemonId == 3 ? setPokemonId(1) : setPokemonId(pokemonId + 1);
+    pokemonId == 10 ? setPokemonId(1) : setPokemonId(pokemonId + 1);
     console.log(pokemonId);
     getPokemon();
   }
@@ -47,7 +47,7 @@ const Pokedex = ({ setClose }) => {
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
               <img src={pokemon.mainUrl} alt='pokemon' className='pokedex_pokemon_image_view' />
-              <p>{pokemon.category}</p>
+              
             </div>
             <div className='pokedex_pokemon_info'>
               <h1 className='pokedex_pokemon_info_name'>
@@ -60,7 +60,7 @@ const Pokedex = ({ setClose }) => {
                     alt='health'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>55</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseHP}</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
@@ -68,7 +68,7 @@ const Pokedex = ({ setClose }) => {
                     alt='attack'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>24</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDamage}</p>
                 </div>
                 <div className='pokedex_pokemon_info_stats_single'>
                   <img
@@ -76,7 +76,7 @@ const Pokedex = ({ setClose }) => {
                     alt='defense'
                     className='pokedex_pokemon_info_stats_single_icon'
                   />
-                  <p className='pokedex_pokemon_info_stats_single_number'>43</p>
+                  <p className='pokedex_pokemon_info_stats_single_number'>{pokemon.baseDefense}</p>
                 </div>
               </div>
               <p className='pokedex_pokemon_info_description'>{pokemon.description}</p>
