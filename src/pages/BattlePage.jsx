@@ -213,7 +213,7 @@ const BattlePage = () => {
                         </div>
                         <h4 className='battle_information_center_scroll_turn_attack_properties'>
                           {item.descSec} :
-                          <span style={{ color: "#A80E0E", fontWeight: "700" }}>-11HP</span>
+                          <span style={{ color: "#A80E0E", fontWeight: "700" }}>{item.damageFirstPokemon}</span>
                         </h4>
                       </div>
                       <div className='battle_information_center_scroll_turn_attack'>
@@ -285,7 +285,7 @@ const BattlePage = () => {
                       onClick={() => createTurn(item.id)}
                       key={item.id}
                       className='battle_attacks_attack'>
-                      <img className='battle_attacks_attack_type' src={grass} alt={"grass"} />
+                      <img className='battle_attacks_attack_type' src={item.imageUrl} alt={item.name} />
                       <div className='battle_attacks_attack_info'>
                         <p className='battle_attacks_attack_info_name'>{item.name}</p>
                         <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>

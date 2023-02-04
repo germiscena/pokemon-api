@@ -23,13 +23,13 @@ const MyPokemons = () => {
   return (
     <div className='myPokemons'>
       <div className='myPokemons_inside'>
-        <h3 className='myPokemons_inside_title'>Мои покемоны</h3>
+        <h3 className='myPokemons_inside_title'>My Pokemons</h3>
         <div className='myPokemons_inside_pokemons'>
           {pokemons.map((item) => {
             return (
               <div key={item.id} className='myPokemons_inside_pokemons_single'>
                 <img
-                  src={heleolisk}
+                  src={item.pokemonRecord.mainUrl}
                   alt='pokemon'
                   className='myPokemons_inside_pokemons_single_image'
                 />

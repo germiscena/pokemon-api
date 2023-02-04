@@ -32,8 +32,13 @@
     justify-content: space-evenly;
 
     &_image {
-      width: 50px;
       cursor: pointer;
+      &_right{
+        width: 60px;
+      }
+      &_left {
+        width: 50px;
+      }
     }
   }
 }
@@ -44,6 +49,6 @@
 }
 .right {
   right: 0;
-  border-top-left-radius: 50px;
+  border-top-left-radius: 30px;
   border-bottom-left-radius: 50px;
 }

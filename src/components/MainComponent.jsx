@@ -97,7 +97,7 @@ const MainComponent = ({ children }) => {
                 />
               ) : (
                 <img
-                  className='main_borders_image'
+                  className='main_borders_image_right'
                   onClick={() => setWildBattles(!wildBattles)}
                   src={wild}
                   alt='wild pokemons'
@@ -106,7 +106,7 @@ const MainComponent = ({ children }) => {
             </Link>
             <img
               onClick={() => setPokedexOpen(true)}
-              className='main_borders_image'
+              className='main_borders_image_right'
               src={pokedex}
               alt='pokedex'
             />

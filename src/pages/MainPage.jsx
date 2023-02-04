@@ -82,22 +82,22 @@ const MainPage = () => {
         </div>
         <div className='mainPage_bottom_links'>
           <div className='mainPage_bottom_links_route'>
-            <h3 className='mainPage_bottom_links_route_title'>ПЕРЕХОДЫ</h3>
+            <h3 className='mainPage_bottom_links_route_title'>LOCATION</h3>
             <div className='mainPage_bottom_links_route_points'>
               <button className='mainPage_bottom_links_route_points_single'>
-                Академия тренеров
+                Academy of trainers
               </button>
-              <button className='mainPage_bottom_links_route_points_single'>Покецентр</button>
-              <button className='mainPage_bottom_links_route_points_single'>Дикий лес</button>
+              <button className='mainPage_bottom_links_route_points_single'>PokeCenter</button>
+              <button className='mainPage_bottom_links_route_points_single'>Wild Forest</button>
             </div>
           </div>
           <div className='mainPage_bottom_links_route'>
-            <h3 className='mainPage_bottom_links_route_title'>ДЕЙСТВИЯ</h3>
+            <h3 className='mainPage_bottom_links_route_title'>ACTIONS</h3>
             <div className='mainPage_bottom_links_route_points'>
               <button
                 className='mainPage_bottom_links_route_points_single'
                 onClick={() => handleClick()}>
-                Лечение
+                Healing
               </button>
               {show && (
                 <ToastComponent
@@ -107,7 +107,7 @@ const MainPage = () => {
                   text={"Your Pokémons are healed."}
                 />
               )}
-              <button className='mainPage_bottom_links_route_points_single'>Прогулка</button>
+              <button className='mainPage_bottom_links_route_points_single'>Walk</button>
             </div>
           </div>
         </div>
