@@ -19,36 +19,10 @@ const BattlePage = () => {
   const [battleState, setBattleState] = React.useState(location.state);
   const [myPokemon, setMyPokemon] = React.useState({});
   const [enemyPokemon, setEnemyPokemon] = React.useState({});
-  const [connection, setConnection] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [myAbilities, setMyAbilities] = React.useState({});
   const [turn, setTurn] = React.useState([]);
   console.log(myAbilities);
-  React.useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
-      .withAutomaticReconnect()
-      .build();
-
-    setConnection(newConnection);
-  }, []);
-
-  React.useEffect(() => {
-    if (connection != null) {
-      connection
-        .start()
-        .then(function () {
-          console.log("Connected to the game hub");
-        })
-        .catch(function (err) {
-          return console.error(err.toString());
-        });
-
-      connection.invoke("joinGroup", battleState.id).catch(function (err) {
-        return console.error(err.toString());
-      });
-    }
-  }, [connection]);
 
   function typeSelection(name) {
     if (name == "ground") {

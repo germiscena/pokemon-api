@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage.jsx";
 import BattlePage from "./pages/BattlePage.jsx";
 import Registration from "./pages/Registration.jsx";
 import AppContext from "./context.js";
+import MultyBattlePage from "./pages/MultyBattlePage.jsx";
 function App() {
   const [pokedexOpen, setPokedexOpen] = React.useState(false);
   const [wildBattles, setWildBattles] = React.useState(false);
@@ -27,6 +28,7 @@ function App() {
           <Route path='/main' element={<MainPage />} />
           <Route path='/battle' element={<BattlePage />} />
           <Route path='/reg' element={<Registration />} />
+          <Route path='/multy-battle' element={<MultyBattlePage />} />
         </Routes>
       </MainComponent>
     </AppContext.Provider>

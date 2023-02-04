@@ -115,7 +115,7 @@ const MainComponent = ({ children }) => {
                 alt='pokedex'
               />
             </Link>
-            <Link to='/battle'>
+            <Link to='/multy-battle'>
               <img className='main_borders_image' src={battles} alt='battles' />
               
             </Link>
