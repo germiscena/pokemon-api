@@ -2,8 +2,9 @@ import React from "react";
 import "./MainComponent.scss";
 import battles from "../img/battles.svg";
 import pokedex from "../img/pokedex.svg";
-import groups from "../img/groups.svg";
-import backpack from "../img/business_center.svg";
+import friends from "../img/groups.svg";
+import inventory from "../img/business_center.svg";
+import logout from "../img/logout.svg";
 import pets from "../img/pets.svg";
 import wild from "../img/wild.svg";
 import wildOn from "../img/wildOn.svg";
@@ -83,8 +84,9 @@ const MainComponent = ({ children }) => {
               src={pets}
               alt='pokemons'
             />
-            <img className='main_borders_image' src={backpack} alt='inventory' />
-            <img className='main_borders_image' src={groups} alt='players' />
+            <img className='main_borders_image' src={inventory} alt='inventory' />
+            <img className='main_borders_image' src={friends} alt='players' />
+            <img className='main_borders_image' src={logout} alt='logout' />
           </div>
           <div className='main_borders right'>
             <Link to='/main'>
@@ -97,21 +99,25 @@ const MainComponent = ({ children }) => {
                 />
               ) : (
                 <img
-                  className='main_borders_image_right'
+                  className='main_borders_image'
                   onClick={() => setWildBattles(!wildBattles)}
                   src={wild}
                   alt='wild pokemons'
                 />
               )}
+            
             </Link>
-            <img
-              onClick={() => setPokedexOpen(true)}
-              className='main_borders_image_right'
-              src={pokedex}
-              alt='pokedex'
-            />
+            <Link>
+              <img
+                onClick={() => setPokedexOpen(true)}
+                className='main_borders_image'
+                src={pokedex}
+                alt='pokedex'
+              />
+            </Link>
             <Link to='/battle'>
               <img className='main_borders_image' src={battles} alt='battles' />
+              
             </Link>
           </div>
         </div>
