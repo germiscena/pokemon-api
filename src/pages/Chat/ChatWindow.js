@@ -12,7 +12,7 @@ const ChatWindow = (props) => {
     />
   ));
 
-  return <div className='mainPage_bottom_chat_messages'>{chat}</div>;
+  return <div className='mainPage_bottom_chat_chatBlock_messages'>{chat}</div>;
 };
 
 export default ChatWindow;

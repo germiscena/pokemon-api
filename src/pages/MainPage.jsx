@@ -14,14 +14,15 @@ const MainPage = () => {
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
-  const [userMoney, setUserMoney ] = useState(0);
-  let token = localStorage.getItem('token');
+  const [userMoney, setUserMoney] = useState(0);
+  let token = localStorage.getItem("token");
 
   const latestChat = useRef(null);
   latestChat.current = chat;
 
-  async function healingPokemons(){
-    let res = await axiosInstance.put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem('userId'))
+  async function healingPokemons() {
+    let res = await axiosInstance
+      .put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem("userId"))
       .then(setUserMoney(res.data));
   }
   const handleClick = () => {
@@ -76,8 +77,22 @@ const MainPage = () => {
       <div className='mainPage_bottom'>
         <div className='mainPage_bottom_chat'>
           <div className='mainPage_bottom_chat_messages'>
-            <ChatWindow chat={chat} />
-            <ChatInput sendMessage={sendMessage} />
+            <div className='mainPage_bottom_chat_messages_chatBlock'>
+              <ChatWindow chat={chat} />
+              <ChatInput sendMessage={sendMessage} />
+            </div>
+            <div className='mainPage_bottom_chat_messages_users'>
+              <div className='mainPage_bottom_chat_messages_users_names'>
+                <p className='mainPage_bottom_chat_messages_users_names_name'>Pasha</p>
+                <div className='hiddenblock'>f</div>
+              </div>
+              <div className='mainPage_bottom_chat_messages_users_names'>
+                <p className='mainPage_bottom_chat_messages_users_names_name'>Arsen</p>
+              </div>
+              <div className='mainPage_bottom_chat_messages_users_names'>
+                <p className='mainPage_bottom_chat_messages_users_names_name'>Wasya</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className='mainPage_bottom_links'>

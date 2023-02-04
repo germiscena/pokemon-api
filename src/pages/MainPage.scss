@@ -24,7 +24,7 @@
 
     &_chat {
       width: 640px;
-      min-width: 350px;
+      min-width: 500px;
       height: 250px;
       background-color: #f6f2f2;
 
@@ -34,36 +34,77 @@
         background-color: #f6f2f2;
         padding-top: 5px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
         overflow-y: auto;
-
-        &_single {
-          border-radius: 5px;
+        &_chatBlock {
           display: flex;
-          flex-direction: row;
-          font-family: "Montserrat", sans-serif;
-          font-size: 12px;
-          color: black;
-          margin: 0;
-          margin-bottom: 8px;
+          flex-direction: column;
+          justify-content: space-between;
+          &_single {
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            font-family: "Montserrat", sans-serif;
+            font-size: 12px;
+            color: black;
+            margin: 0;
+            margin-bottom: 8px;
 
-          &_time {
+            &_time {
+              color: #bab5b5;
+              margin: 0;
+              margin-right: 10px;
+            }
+            &_user {
+              font-weight: 400;
+              margin: 0;
+              margin-right: 7px;
+            }
+            &_message {
+              margin: 0;
+            }
+          }
+        }
+        &_users {
+          min-width: 20%;
+          display: flex;
+          flex-direction: column;
+          justify-content: baseline;
+          border-left: 1px solid #bab5b5;
+
+          &_names {
+            margin: 0;
+            margin-bottom: 10px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 16px;
+            margin-left: 10px;
             color: #bab5b5;
-            margin: 0;
-            margin-right: 10px;
+
+            &_name {
+              margin: 0;
+            }
+
+            .hiddenblock {
+              position: absolute;
+              width: 100px;
+              height: 100px;
+              display: none;
+              background-color: black;
+            }
           }
-          &_user {
-            font-weight: 400;
-            margin: 0;
-            margin-right: 7px;
+          &_names:hover {
+            color: black;
+            cursor: pointer;
           }
-          &_message {
-            margin: 0;
+          &_names:hover &_hiddenblock {
+            display: block;
           }
         }
       }
       &_send {
-        width: 87%;
+        width: 400px;
+        min-width: 300px;
         margin-left: 40px;
         height: 30px;
         border-radius: 3px;
@@ -73,6 +114,7 @@
         caret-color: #f6f2f2;
         color: black;
         font-family: "Montserrat", sans-serif;
+        margin-bottom: 20px;
       }
       input:focus {
         outline: none;
