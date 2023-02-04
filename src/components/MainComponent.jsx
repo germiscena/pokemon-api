@@ -49,6 +49,7 @@ const MainComponent = ({ children }) => {
       .get(`${API_URL}/Pokemon/get-user-pokemons?userId=` + userId)
       .then((res) => setMyPokemons(res.data[0]));
   }
+  console.log(myPokemons);
   async function getBattleInfo() {
     let res = await axiosInstance
       .post(`${API_URL}/Battle/create-local-battle?pokemonId=` + myPokemons.id)
@@ -105,7 +106,6 @@ const MainComponent = ({ children }) => {
                   alt='wild pokemons'
                 />
               )}
-            
             </Link>
             <Link>
               <img
@@ -117,7 +117,6 @@ const MainComponent = ({ children }) => {
             </Link>
             <Link to='/battle'>
               <img className='main_borders_image' src={battles} alt='battles' />
-              
             </Link>
           </div>
         </div>

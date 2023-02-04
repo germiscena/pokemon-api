@@ -23,7 +23,7 @@ const BattlePage = () => {
   const [loading, setLoading] = React.useState(true);
   const [myAbilities, setMyAbilities] = React.useState({});
   const [turn, setTurn] = React.useState([]);
-  console.log(myAbilities);
+  const [round, setRound] = React.useState(1);
   React.useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
@@ -50,20 +50,6 @@ const BattlePage = () => {
     }
   }, [connection]);
 
-  function typeSelection(name) {
-    if (name == "ground") {
-      return ground;
-    }
-    if (name == "water") {
-      return water;
-    }
-    if (name == "grass") {
-      return grass;
-    }
-    if (name == "earth") {
-      return earth;
-    }
-  }
   async function fetchPokeInfo() {
     await axiosInstance
       .get(`${API_URL}/Pokemon/get-pokemon-ability-and-category?id=` + battleState.attackPokemon)
@@ -93,18 +79,19 @@ const BattlePage = () => {
       .then((res) => {
         setMyPokemon(res.data.atackPokemon);
         setEnemyPokemon(res.data.defendingPokemon);
-        setTurn(...turn, [
+        setTurn([
+          ...turn,
           {
-            id: battleState.queue,
+            id: round,
             descFirst: res.data.descriptionFirstPokemon,
             descSec: res.data.descriptionSecondPokemon,
           },
         ]);
+        setRound(round + 1);
       });
   }
-
-  console.log(myPokemon);
-
+  console.log("MY", myPokemon);
+  console.log("ENEMY", enemyPokemon);
   return (
     <>
       {loading != true ? (
@@ -120,7 +107,7 @@ const BattlePage = () => {
                 <p className='battle_information_pokemon_props_name'>
                   # {myPokemon.pokemonRecord.id} {myPokemon.pokemonRecord.name}
                 </p>
-                <p className='battle_information_pokemon_props_level'>39</p>
+                <p className='battle_information_pokemon_props_level'>{myPokemon.level}</p>
               </div>
               <div
                 style={{
@@ -139,9 +126,7 @@ const BattlePage = () => {
             </div>
             <div className='battle_information_center'>
               <div className='battle_information_center_round'>
-                <h4 className='battle_information_center_round_number'>
-                  Раунд {battleState.queue}
-                </h4>
+                <h4 className='battle_information_center_round_number'>Раунд {round}</h4>
               </div>
               <div className='battle_information_center_scroll'>
                 <div className='battle_information_center_scroll_firstTurn'>
@@ -213,7 +198,9 @@ const BattlePage = () => {
                         </div>
                         <h4 className='battle_information_center_scroll_turn_attack_properties'>
                           {item.descSec} :
-                          <span style={{ color: "#A80E0E", fontWeight: "700" }}>{item.damageFirstPokemon}</span>
+                          <span style={{ color: "#A80E0E", fontWeight: "700" }}>
+                            {item.damageFirstPokemon}
+                          </span>
                         </h4>
                       </div>
                       <div className='battle_information_center_scroll_turn_attack'>
@@ -258,7 +245,7 @@ const BattlePage = () => {
                 <p className='battle_information_pokemon_props_name'>
                   # {enemyPokemon.pokemonRecord.id} {enemyPokemon.pokemonRecord.name}
                 </p>
-                <p className='battle_information_pokemon_props_level'>39</p>
+                <p className='battle_information_pokemon_props_level'>{enemyPokemon.level}</p>
               </div>
               <div
                 style={{
@@ -285,7 +272,11 @@ const BattlePage = () => {
                       onClick={() => createTurn(item.id)}
                       key={item.id}
                       className='battle_attacks_attack'>
-                      <img className='battle_attacks_attack_type' src={item.imageUrl} alt={item.name} />
+                      <img
+                        className='battle_attacks_attack_type'
+                        src={item.imageUrl}
+                        alt={item.name}
+                      />
                       <div className='battle_attacks_attack_info'>
                         <p className='battle_attacks_attack_info_name'>{item.name}</p>
                         <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>

@@ -19,7 +19,7 @@ const MyPokemons = () => {
   React.useEffect(() => {
     getPokemons();
   }, []);
-
+  console.log("POKE", pokemons);
   return (
     <div className='myPokemons'>
       <div className='myPokemons_inside'>
@@ -36,8 +36,20 @@ const MyPokemons = () => {
                 <p className='myPokemons_inside_pokemons_single_name'>
                   #00{item.pokemonRecordId} {item.name}
                 </p>
-                <div className='myPokemons_inside_pokemons_single_health' />
-                <div className='myPokemons_inside_pokemons_single_exp' />
+                <div
+                  style={{
+                    background: `linear-gradient(to right, #1fe973 ${item.currentHealth}%, transparent 0%)`,
+                  }}
+                  className='myPokemons_inside_pokemons_single_health'
+                />
+                <div
+                  style={{
+                    background: `linear-gradient(to right, #45ebeb ${
+                      item.experience / 10
+                    }%, transparent 0%)`,
+                  }}
+                  className='myPokemons_inside_pokemons_single_exp'
+                />
               </div>
             );
           })}
