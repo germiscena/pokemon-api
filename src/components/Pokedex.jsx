@@ -15,23 +15,30 @@ import axiosInstance from "../config/axiosInstance";
 const Pokedex = ({ setClose }) => {
   const [pokemon, setPokemon] = React.useState({});
   const [pokemonId, setPokemonId] = React.useState(1);
+  const [pokemons, setPokemons] = React.useState(1);
   async function getPokemon() {
     let data = await axiosInstance.get(`${API_URL}/Pokedex/pokemonId?id=${pokemonId}`);
     setPokemon(data.data);
   }
+  async function getAllPokemons() {
+    let data = await axiosInstance.get(`${API_URL}/Pokedex/get-pokemons-from-pokedex`);
+    setPokemons(data.data.length);
+  }
   React.useEffect(() => {
     getPokemon();
+    getAllPokemons();
   }, []);
+  React.useEffect(() => {
+    getPokemon();
+  }, [pokemonId]);
   const { pokedexOpen } = React.useContext(AppContext);
   function nextPokemon() {
-    pokemonId == 10 ? setPokemonId(1) : setPokemonId(pokemonId + 1);
-    console.log(pokemonId);
+    pokemonId == pokemons ? setPokemonId(1) : setPokemonId(pokemonId + 1);
     getPokemon();
   }
 
   function prevPokemon() {
-    pokemonId == 0 ? setPokemonId(1) : setPokemonId(pokemonId - 1);
-    console.log(pokemonId);
+    pokemonId == 1 ? setPokemonId(pokemons) : setPokemonId(pokemonId - 1);
     getPokemon();
   }
   return (
@@ -47,7 +54,6 @@ const Pokedex = ({ setClose }) => {
           <div className='pokedex_pokemon'>
             <div className='pokedex_pokemon_image'>
               <img src={pokemon.mainUrl} alt='pokemon' className='pokedex_pokemon_image_view' />
-              
             </div>
             <div className='pokedex_pokemon_info'>
               <h1 className='pokedex_pokemon_info_name'>

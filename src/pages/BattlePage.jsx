@@ -4,9 +4,12 @@ import surrender from "../img/surrender.svg";
 import reload from "../img/reload.svg";
 import backpack from "../img/backpack.svg";
 import swords from "../img/swords.svg";
-import { useLocation } from "react-router";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
+import leaveBattle from "../img/leaveBattle.svg";
 
 const BattlePage = () => {
   const location = useLocation();
@@ -18,6 +21,32 @@ const BattlePage = () => {
   const [turn, setTurn] = React.useState([]);
   const [round, setRound] = React.useState(1);
   const [connection, setConnection] = React.useState();
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  React.useEffect(() => {
+    if (connection != null) {
+      connection
+        .start()
+        .then(function () {
+          console.log("Connected to the game hub");
+        })
+        .catch(function (err) {
+          return console.error(err.toString());
+        });
+
+      connection.invoke("joinGroup", battleState.id).catch(function (err) {
+        return console.error(err.toString());
+      });
+    }
+  }, [connection]);
 
   async function fetchPokeInfo() {
     await axiosInstance
@@ -73,21 +102,23 @@ const BattlePage = () => {
                 alt={myPokemon.pokemonRecord.name}
               />
               <div className='battle_information_pokemon_props'>
+                <p className='battle_information_pokemon_props_level'>{myPokemon.level}</p>
                 <p className='battle_information_pokemon_props_name'>
                   # {myPokemon.pokemonRecord.id} {myPokemon.pokemonRecord.name}
                 </p>
-                <p className='battle_information_pokemon_props_level'>{myPokemon.currentLevel}</p>
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${myPokemon.currentHealth / myPokemon.maxHealth * 100}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${
+                    (myPokemon.currentHealth / myPokemon.maxHealth) * 100
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    myPokemon.experience / myPokemon.experianceToNextLevel * 100
+                    (myPokemon.experience / myPokemon.experianceToNextLevel) * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
@@ -218,14 +249,16 @@ const BattlePage = () => {
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${enemyPokemon.currentHealth / enemyPokemon.maxHealth * 100}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${
+                    (enemyPokemon.currentHealth / enemyPokemon.maxHealth) * 100
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    enemyPokemon.experience / enemyPokemon.experianceToNextLevel * 100
+                    (enemyPokemon.experience / enemyPokemon.experianceToNextLevel) * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
@@ -233,28 +266,33 @@ const BattlePage = () => {
             </div>
           </div>
           <div className='battle_attacks'>
-            {myPokemon.currentHealth <= 0 || enemyPokemon.currentHealth <= 0
-              ? ""
-              : myAbilities.map((item) => {
-                  return (
-                    <div
-                      onClick={() => createTurn(item.id)}
-                      key={item.id}
-                      className='battle_attacks_attack'>
-                      <img
-                        className='battle_attacks_attack_type'
-                        src={item.imageUrl}
-                        alt={item.name}
-                      />
-                      <div className='battle_attacks_attack_info'>
-                        <p className='battle_attacks_attack_info_name'>{item.name}</p>
-                        <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>
-                          35 / 35 РР
-                        </p>
-                      </div>
+            {myPokemon.currentHealth <= 0 || enemyPokemon.currentHealth <= 0 ? (
+              <div className='battle_attacks_leave' onClick={() => navigate("/main")}>
+                <img src={leaveBattle} className='battle_attacks_leave_img' alt='leave' />
+                <p className='battle_attacks_leave_text'>Leave</p>
+              </div>
+            ) : (
+              myAbilities.map((item) => {
+                return (
+                  <div
+                    onClick={() => createTurn(item.id)}
+                    key={item.id}
+                    className='battle_attacks_attack'>
+                    <img
+                      className='battle_attacks_attack_type'
+                      src={item.imageUrl}
+                      alt={item.name}
+                    />
+                    <div className='battle_attacks_attack_info'>
+                      <p className='battle_attacks_attack_info_name'>{item.name}</p>
+                      <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>
+                        35 / 35 РР
+                      </p>
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })
+            )}
           </div>
           <div className='battle_buttons'>
             <div className='battle_buttons_button' style={{ cursor: "pointer" }}>

@@ -27,9 +27,11 @@
           margin: 5px 10px 10px;
         }
         &_level {
-          margin: 5px 0px 0px 10px;
+          position: absolute;
+          top: 320px;
           font-family: "Montserrat", sans-serif;
           font-size: 20px;
+          margin-left: 10px;
         }
       }
 
@@ -166,6 +168,35 @@
           font-size: 12px;
           text-transform: uppercase;
         }
+      }
+    }
+    &_leave {
+      width: 120px;
+      height: 40px;
+      background-color: #3c3c3c;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: row;
+
+      background-color: white;
+      text-align: center;
+      padding: 5px;
+      cursor: pointer;
+
+      &_img {
+        width: 30px;
+        padding: 3px;
+        height: 30px;
+      }
+      &_text {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        color: #000000;
+        margin: 0;
+        margin-left: 10px;
+        margin-top: 2px;
       }
     }
   }
