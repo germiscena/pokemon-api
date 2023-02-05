@@ -102,10 +102,10 @@ const BattlePage = () => {
                 alt={myPokemon.pokemonRecord.name}
               />
               <div className='battle_information_pokemon_props'>
+                <p className='battle_information_pokemon_props_level'>{myPokemon.level}</p>
                 <p className='battle_information_pokemon_props_name'>
                   # {myPokemon.pokemonRecord.id} {myPokemon.pokemonRecord.name}
                 </p>
-                <p className='battle_information_pokemon_props_level'>{myPokemon.level}</p>
               </div>
               <div
                 style={{

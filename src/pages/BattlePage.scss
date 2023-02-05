@@ -27,9 +27,11 @@
           margin: 5px 10px 10px;
         }
         &_level {
-          margin: 5px 0px 0px 10px;
+          position: absolute;
+          top: 320px;
           font-family: "Montserrat", sans-serif;
           font-size: 20px;
+          margin-left: 10px;
         }
       }
 
