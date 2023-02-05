@@ -1,6 +1,6 @@
 import "./MainPage.scss";
 import React, { useState, useEffect, useRef } from "react";
-import { HubConnectionBuilder  } from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 import ChatWindow from "../pages/Chat/ChatWindow";
 import ChatInput from "../pages/Chat/ChatInput";
@@ -16,12 +16,12 @@ const MainPage = () => {
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
   const [userMoney, setUserMoney] = useState(0);
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState("");
   const [callFight, setCallFight] = React.useState(true);
-  let userName = localStorage.getItem('nickName');
-  const [ usersArray, setUsersArray ] = useState([]);
+  let userName = localStorage.getItem("nickName");
+  const [usersArray, setUsersArray] = useState([]);
   let token = localStorage.getItem("token");
-
+  const users = ["BAC9", "APCEH", "TTACA"];
   const latestChat = useRef(null);
   latestChat.current = chat;
 
@@ -52,7 +52,7 @@ const MainPage = () => {
         .start()
         .then((result) => {
           console.log("Connected!");
-          connection.invoke("OnConnected", );
+          connection.invoke("OnConnected");
           connection.on("AllUsers", (users) => {
             setUsersArray(users);
           });
@@ -79,11 +79,10 @@ const MainPage = () => {
     }
   };
 
-  const sendChallenge = async (connectionId) =>{
-    try{
-      await connection.invoke("ChallengePlayer", connectionId)
-    }
-    catch (e){
+  const sendChallenge = async (connectionId) => {
+    try {
+      await connection.invoke("ChallengePlayer", connectionId);
+    } catch (e) {
       console.log(e);
     }
   };
@@ -100,36 +99,42 @@ const MainPage = () => {
             </div>
             <div className='mainPage_bottom_chat_messages_users'>
               <div className='mainPage_bottom_chat_messages_users_names'>
-              {usersArray.map((item) => {
-                    return (
-                      <><p
-                        onClick={() => setHidden(false)}
+                {users.map((item) => {
+                  return (
+                    <div key={item}>
+                      <p
+                        onClick={() => setHidden(item)}
                         className='mainPage_bottom_chat_messages_users_names_name'>
                         {item}
-                      </p><div
-                        className={hidden
-                          ? "mainPage_bottom_chat_messages_users_names_hiddenBlock hidden"
-                          : "mainPage_bottom_chat_messages_users_names_hiddenBlock"}>
-                          <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                            Информация о {item}
-                          </p>
-                          <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                            Вызвать на бой
-                          </p>
-                          <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                            Добавить в друзья
-                          </p>
-                          <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                            Открыть чат
-                          </p>
-                          <img
-                            onClick={() => setHidden(true)}
-                            src={close}
-                            alt='close'
-                            className='mainPage_bottom_chat_messages_users_names_hiddenBlock_close' />
-                        </div></>
-                    );
-                  })}
+                      </p>
+                      <div
+                        className={
+                          hidden != item
+                            ? "mainPage_bottom_chat_messages_users_names_hiddenBlock hidden"
+                            : "mainPage_bottom_chat_messages_users_names_hiddenBlock"
+                        }>
+                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                          Информация о {item}
+                        </p>
+                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                          Вызвать на бой
+                        </p>
+                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                          Добавить в друзья
+                        </p>
+                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                          Открыть чат
+                        </p>
+                        <img
+                          onClick={() => setHidden("")}
+                          src={close}
+                          alt='close'
+                          className='mainPage_bottom_chat_messages_users_names_hiddenBlock_close'
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
