@@ -1,9 +1,5 @@
 import React from "react";
 import "./BattlePage.scss";
-import earth from "../img/earth.png";
-import grass from "../img/grass.png";
-import water from "../img/water.png";
-import ground from "../img/ground.png";
 import surrender from "../img/surrender.svg";
 import reload from "../img/reload.svg";
 import backpack from "../img/backpack.svg";
@@ -113,14 +109,16 @@ const BattlePage = () => {
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${myPokemon.currentHealth}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${
+                    (myPokemon.currentHealth / myPokemon.maxHealth) * 100
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    myPokemon.experience / 100
+                    (myPokemon.experience / myPokemon.experianceToNextLevel) * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
@@ -251,14 +249,16 @@ const BattlePage = () => {
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${enemyPokemon.currentHealth}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${
+                    (enemyPokemon.currentHealth / enemyPokemon.maxHealth) * 100
+                  }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    enemyPokemon.experience / 100
+                    (enemyPokemon.experience / enemyPokemon.experianceToNextLevel) * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
