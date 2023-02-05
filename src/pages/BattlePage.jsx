@@ -1,16 +1,10 @@
 import React from "react";
 import "./BattlePage.scss";
-import earth from "../img/earth.png";
-import grass from "../img/grass.png";
-import water from "../img/water.png";
-import ground from "../img/ground.png";
 import surrender from "../img/surrender.svg";
 import reload from "../img/reload.svg";
 import backpack from "../img/backpack.svg";
 import swords from "../img/swords.svg";
-import axios from "axios";
 import { useLocation } from "react-router";
-import { HubConnectionBuilder } from "@microsoft/signalr";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
 
@@ -23,31 +17,6 @@ const BattlePage = () => {
   const [myAbilities, setMyAbilities] = React.useState({});
   const [turn, setTurn] = React.useState([]);
   const [round, setRound] = React.useState(1);
-  React.useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
-      .withAutomaticReconnect()
-      .build();
-
-    setConnection(newConnection);
-  }, []);
-
-  React.useEffect(() => {
-    if (connection != null) {
-      connection
-        .start()
-        .then(function () {
-          console.log("Connected to the game hub");
-        })
-        .catch(function (err) {
-          return console.error(err.toString());
-        });
-
-      connection.invoke("joinGroup", battleState.id).catch(function (err) {
-        return console.error(err.toString());
-      });
-    }
-  }, [connection]);
 
   async function fetchPokeInfo() {
     await axiosInstance
@@ -110,14 +79,14 @@ const BattlePage = () => {
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${myPokemon.currentHealth}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${myPokemon.currentHealth / myPokemon.maxHealth * 100}%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    myPokemon.experience / 100
+                    myPokemon.experience / myPokemon.experianceToNextLevel * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
@@ -248,14 +217,14 @@ const BattlePage = () => {
               </div>
               <div
                 style={{
-                  background: `linear-gradient(to right, #04ff00 ${enemyPokemon.currentHealth}%, transparent 0%)`,
+                  background: `linear-gradient(to right, #04ff00 ${enemyPokemon.currentHealth / enemyPokemon.maxHealth * 100}%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_health'
               />
               <div
                 style={{
                   background: `linear-gradient(to right, #45ebeb ${
-                    enemyPokemon.experience / 100
+                    enemyPokemon.experience / enemyPokemon.experianceToNextLevel * 100
                   }%, transparent 0%)`,
                 }}
                 className='battle_information_pokemon_experience'
