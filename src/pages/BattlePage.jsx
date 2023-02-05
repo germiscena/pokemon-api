@@ -9,10 +9,11 @@ import reload from "../img/reload.svg";
 import backpack from "../img/backpack.svg";
 import swords from "../img/swords.svg";
 import axios from "axios";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
+import leaveBattle from "../img/leaveBattle.svg";
 
 const BattlePage = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const BattlePage = () => {
   const [turn, setTurn] = React.useState([]);
   const [round, setRound] = React.useState(1);
   const [connection, setConnection] = React.useState();
+  const navigate = useNavigate();
   React.useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
@@ -264,28 +266,33 @@ const BattlePage = () => {
             </div>
           </div>
           <div className='battle_attacks'>
-            {myPokemon.currentHealth <= 0 || enemyPokemon.currentHealth <= 0
-              ? ""
-              : myAbilities.map((item) => {
-                  return (
-                    <div
-                      onClick={() => createTurn(item.id)}
-                      key={item.id}
-                      className='battle_attacks_attack'>
-                      <img
-                        className='battle_attacks_attack_type'
-                        src={item.imageUrl}
-                        alt={item.name}
-                      />
-                      <div className='battle_attacks_attack_info'>
-                        <p className='battle_attacks_attack_info_name'>{item.name}</p>
-                        <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>
-                          35 / 35 РР
-                        </p>
-                      </div>
+            {myPokemon.currentHealth <= 0 || enemyPokemon.currentHealth <= 0 ? (
+              <div className='battle_attacks_leave' onClick={() => navigate("/main")}>
+                <img src={leaveBattle} className='battle_attacks_leave_img' alt='leave' />
+                <p className='battle_attacks_leave_text'>Leave</p>
+              </div>
+            ) : (
+              myAbilities.map((item) => {
+                return (
+                  <div
+                    onClick={() => createTurn(item.id)}
+                    key={item.id}
+                    className='battle_attacks_attack'>
+                    <img
+                      className='battle_attacks_attack_type'
+                      src={item.imageUrl}
+                      alt={item.name}
+                    />
+                    <div className='battle_attacks_attack_info'>
+                      <p className='battle_attacks_attack_info_name'>{item.name}</p>
+                      <p style={{ color: "#9b9b9b", fontSize: "10px", marginLeft: "2px" }}>
+                        35 / 35 РР
+                      </p>
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })
+            )}
           </div>
           <div className='battle_buttons'>
             <div className='battle_buttons_button' style={{ cursor: "pointer" }}>

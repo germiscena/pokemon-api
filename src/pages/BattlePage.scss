@@ -168,6 +168,35 @@
         }
       }
     }
+    &_leave {
+      width: 120px;
+      height: 40px;
+      background-color: #3c3c3c;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: row;
+
+      background-color: white;
+      text-align: center;
+      padding: 5px;
+      cursor: pointer;
+
+      &_img {
+        width: 30px;
+        padding: 3px;
+        height: 30px;
+      }
+      &_text {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        color: #000000;
+        margin: 0;
+        margin-left: 10px;
+        margin-top: 2px;
+      }
+    }
   }
 
   &_buttons {
