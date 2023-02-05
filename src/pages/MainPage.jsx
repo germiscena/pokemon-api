@@ -79,6 +79,15 @@ const MainPage = () => {
     }
   };
 
+  const sendChallenge = async (connectionId) =>{
+    try{
+      await connection.invoke("ChallengePlayer", connectionId)
+    }
+    catch (e){
+      console.log(e);
+    }
+  };
+
   return (
     <div className='mainPage'>
       <div className='mainPage_landscape' />
