@@ -7,14 +7,17 @@ import ChatInput from "../pages/Chat/ChatInput";
 import ToastComponent from "../components/ToastComponent.jsx";
 import axiosInstance from "../config/axiosInstance";
 import { API_URL } from "../.env";
+import close from "../img/closeChat.svg";
 
 const MainPage = () => {
   const [welcome, setWelcome] = useState(false);
-  const [show, setShow] = useState(false);
+  const [showHealing, setShowHealing] = useState(false);
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
   const [userMoney, setUserMoney] = useState(0);
+  const [hidden, setHidden] = useState(true);
+  const [callFight, setCallFight] = React.useState(true);
   let token = localStorage.getItem("token");
 
   const latestChat = useRef(null);
@@ -27,9 +30,9 @@ const MainPage = () => {
   }
   const handleClick = () => {
     healingPokemons();
-    setShow(true);
+    setShowHealing(true);
     setTimeout(() => {
-      setShow(false);
+      setShowHealing(false);
     }, 30000);
   };
 
@@ -83,14 +86,36 @@ const MainPage = () => {
             </div>
             <div className='mainPage_bottom_chat_messages_users'>
               <div className='mainPage_bottom_chat_messages_users_names'>
-                <p className='mainPage_bottom_chat_messages_users_names_name'>Pasha</p>
-                <div className='hiddenblock'>f</div>
-              </div>
-              <div className='mainPage_bottom_chat_messages_users_names'>
-                <p className='mainPage_bottom_chat_messages_users_names_name'>Arsen</p>
-              </div>
-              <div className='mainPage_bottom_chat_messages_users_names'>
-                <p className='mainPage_bottom_chat_messages_users_names_name'>Wasya</p>
+                <p
+                  onClick={() => setHidden(false)}
+                  className='mainPage_bottom_chat_messages_users_names_name'>
+                  Pasha
+                </p>
+                <div
+                  className={
+                    hidden
+                      ? "mainPage_bottom_chat_messages_users_names_hiddenBlock hidden"
+                      : "mainPage_bottom_chat_messages_users_names_hiddenBlock"
+                  }>
+                  <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                    Информация о Pasha
+                  </p>
+                  <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                    Вызвать на бой
+                  </p>
+                  <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                    Добавить в друзья
+                  </p>
+                  <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                    Открыть чат
+                  </p>
+                  <img
+                    onClick={() => setHidden(true)}
+                    src={close}
+                    alt='close'
+                    className='mainPage_bottom_chat_messages_users_names_hiddenBlock_close'
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -114,12 +139,13 @@ const MainPage = () => {
                 onClick={() => handleClick()}>
                 Healing
               </button>
-              {show && (
+              {showHealing && (
                 <ToastComponent
-                  setShow={(inf) => setShow(inf)}
+                  setShow={(inf) => setShowHealing(inf)}
                   isOkey={okey}
-                  show={show}
+                  show={showHealing}
                   text={"Your Pokémons are healed."}
+                  canAccept={false}
                 />
               )}
               <button className='mainPage_bottom_links_route_points_single'>Walk</button>
@@ -127,6 +153,15 @@ const MainPage = () => {
           </div>
         </div>
       </div>
+      {callFight && (
+        <ToastComponent
+          setShow={(inf) => setCallFight(inf)}
+          show={callFight}
+          text={"ПЕТЯ ВЫЗВАЛ ВАС НА БАТТЛ"}
+          isOkey={"battle"}
+          canAccept={true}
+        />
+      )}
     </div>
   );
 };

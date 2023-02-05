@@ -23,6 +23,7 @@ const BattlePage = () => {
   const [myAbilities, setMyAbilities] = React.useState({});
   const [turn, setTurn] = React.useState([]);
   const [round, setRound] = React.useState(1);
+  const [connection, setConnection] = React.useState();
   React.useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
