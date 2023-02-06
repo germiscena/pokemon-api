@@ -10,18 +10,18 @@ import { API_URL } from "../.env";
 import close from "../img/closeChat.svg";
 
 const MainPage = () => {
-  const [welcome, setWelcome] = useState(false);
   const [showHealing, setShowHealing] = useState(false);
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
   const [userMoney, setUserMoney] = useState(0);
   const [hidden, setHidden] = useState("");
-  const [callFight, setCallFight] = React.useState(true);
-  let userName = localStorage.getItem("nickName");
+  const [callFight, setCallFight] = React.useState(false);
+  let userId = localStorage.getItem("userId");
   const [usersArray, setUsersArray] = useState([]);
   let token = localStorage.getItem("token");
-  const users = ["BAC9", "APCEH", "TTACA"];
+  const [ answer, setAnswer ] = useState(false);
+  const [ connectionIdSecondPlayer, setConnectionIdSecondPlayer ] = useState("");
   const latestChat = useRef(null);
   latestChat.current = chat;
 
@@ -37,6 +37,12 @@ const MainPage = () => {
       setShowHealing(false);
     }, 30000);
   };
+  useEffect(() =>{
+    if(answer){
+      console.log("use effect work, but invoke no")
+      connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
+    }
+  }, []);
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -56,16 +62,24 @@ const MainPage = () => {
           connection.on("AllUsers", (users) => {
             setUsersArray(users);
           });
+          connection.on("Challenge", () => {
+            setCallFight(true);
+          })
+          connection.on("StartBattle", (startBattle) => {
+            console.log(startBattle);
+          })
           connection.on("ReceiveMessage", (message) => {
             const updatedChat = [...latestChat.current];
             updatedChat.push(message);
 
             setChat(updatedChat);
           });
+          
         })
         .catch((e) => console.log("Connection failed: ", e));
     }
   }, [connection]);
+
   const sendMessage = async (user, message, time) => {
     const chatMessage = {
       userName: user,
@@ -81,7 +95,8 @@ const MainPage = () => {
 
   const sendChallenge = async (connectionId) => {
     try {
-      await connection.invoke("ChallengePlayer", connectionId);
+      await connection.invoke("ChallengePlayer", userId, connectionId);
+      setConnectionIdSecondPlayer(connectionId);
     } catch (e) {
       console.log(e);
     }
@@ -99,7 +114,7 @@ const MainPage = () => {
             </div>
             <div className='mainPage_bottom_chat_messages_users'>
               <div className='mainPage_bottom_chat_messages_users_names'>
-                {users.map((item) => {
+                {usersArray.map((item) => {
                   return (
                     <div key={item}>
                       <p
@@ -116,7 +131,9 @@ const MainPage = () => {
                         <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
                           Информация о {item}
                         </p>
-                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                        <p 
+                          className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'
+                          onClick={ () => sendChallenge(item)}>
                           Вызвать на бой
                         </p>
                         <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
@@ -176,7 +193,7 @@ const MainPage = () => {
         <ToastComponent
           setShow={(inf) => setCallFight(inf)}
           show={callFight}
-          text={"ПЕТЯ ВЫЗВАЛ ВАС НА БАТТЛ"}
+          text={"You are called to fight"}
           isOkey={"battle"}
           canAccept={true}
         />

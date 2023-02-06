@@ -19,6 +19,13 @@ const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
     return () => clearTimeout(timeoutId);
   }, [show, canAccept]);
 
+  const acceptClick = () => {
+    localStorage.setItem("answer", true)
+  }
+  const closeClick = () => {
+    localStorage.setItem("answer", false)
+  }
+
   return (
     <div className={show ? "toast show" : "toast"}>
       <div className='toast_form'>
@@ -33,8 +40,10 @@ const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
           <p className='toast_form_words_textNotification'>{text}</p>
           {canAccept && (
             <div className='toast_form_words_accept'>
-              <p className='toast_form_words_accept_yes'>Accept</p>
-              <p className='toast_form_words_accept_no'>Close</p>
+              <p className='toast_form_words_accept_yes'
+                onClick={acceptClick}>Accept</p>
+              <p className='toast_form_words_accept_no'
+                onClick={closeClick}>Close</p>
             </div>
           )}
         </div>
