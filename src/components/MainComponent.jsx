@@ -17,6 +17,7 @@ import MyPokemons from "./MyPokemons";
 import axiosInstance from "../config/axiosInstance";
 import { API_URL } from "../.env";
 
+
 const MainComponent = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -49,7 +50,6 @@ const MainComponent = ({ children }) => {
       .get(`${API_URL}/Pokemon/get-user-pokemons?userId=` + userId)
       .then((res) => setMyPokemons(res.data[0]));
   }
-  console.log(myPokemons);
   async function getBattleInfo() {
     let res = await axiosInstance
       .post(`${API_URL}/Battle/create-local-battle?pokemonId=` + myPokemons.id)
@@ -59,6 +59,14 @@ const MainComponent = ({ children }) => {
         navigate("/battle", { state: res.data });
       });
   }
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
+  
   React.useEffect(() => {
     if (battleAnswer == "accept") {
       getPokemons();

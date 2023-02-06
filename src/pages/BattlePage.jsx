@@ -22,31 +22,7 @@ const BattlePage = () => {
   const [round, setRound] = React.useState(1);
   const [connection, setConnection] = React.useState();
   const navigate = useNavigate();
-  React.useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem("token") })
-      .withAutomaticReconnect()
-      .build();
 
-    setConnection(newConnection);
-  }, []);
-
-  React.useEffect(() => {
-    if (connection != null) {
-      connection
-        .start()
-        .then(function () {
-          console.log("Connected to the game hub");
-        })
-        .catch(function (err) {
-          return console.error(err.toString());
-        });
-
-      connection.invoke("joinGroup", battleState.id).catch(function (err) {
-        return console.error(err.toString());
-      });
-    }
-  }, [connection]);
 
   async function fetchPokeInfo() {
     await axiosInstance

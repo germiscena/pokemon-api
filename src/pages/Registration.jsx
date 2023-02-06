@@ -85,7 +85,7 @@ const Registration = () => {
     console.log("click");
     try {
       await axios
-        .post(`${API_URL}}/Auth/register`, {
+        .post(`${API_URL}/Auth/register`, {
           nickName: newNickName,
           email: newEmail,
           password: newPassword,

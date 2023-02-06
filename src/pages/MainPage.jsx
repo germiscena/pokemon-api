@@ -4,10 +4,13 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 
 import ChatWindow from "../pages/Chat/ChatWindow";
 import ChatInput from "../pages/Chat/ChatInput";
-import ToastComponent from "../components/ToastComponent.jsx";
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from "../config/axiosInstance";
 import { API_URL } from "../.env";
 import close from "../img/closeChat.svg";
+import notOkey from "../img/notOkey.svg";
+import okey from "../img/Okey.svg";
+import battleNotification from "../img/battleNotification.png";
 
 const MainPage = () => {
   const [showHealing, setShowHealing] = useState(false);
@@ -15,13 +18,15 @@ const MainPage = () => {
   const [connection, setConnection] = useState(null);
   const [chat, setChat] = useState([]);
   const [userMoney, setUserMoney] = useState(0);
-  const [hidden, setHidden] = useState("");
+  const [hidden, setHidden] = useState({});
   const [callFight, setCallFight] = React.useState(false);
+  let userName = localStorage.getItem("nickName");
   let userId = localStorage.getItem("userId");
   const [usersArray, setUsersArray] = useState([]);
   let token = localStorage.getItem("token");
   const [ answer, setAnswer ] = useState(false);
   const [ connectionIdSecondPlayer, setConnectionIdSecondPlayer ] = useState("");
+  const navigate= useNavigate ();
   const latestChat = useRef(null);
   latestChat.current = chat;
 
@@ -33,9 +38,7 @@ const MainPage = () => {
   const handleClick = () => {
     healingPokemons();
     setShowHealing(true);
-    setTimeout(() => {
-      setShowHealing(false);
-    }, 30000);
+
   };
   useEffect(() =>{
     if(answer){
@@ -58,15 +61,20 @@ const MainPage = () => {
         .start()
         .then((result) => {
           console.log("Connected!");
-          connection.invoke("OnConnected");
+          connection.on("UserExist", () => {
+            console.log("kak by slovyl, no net")
+            navigate("/reg");
+          })
+          connection.invoke("OnConnected", userName, userId);
           connection.on("AllUsers", (users) => {
             setUsersArray(users);
           });
-          connection.on("Challenge", () => {
+          connection.on("Challenge", (connectionIdEnemyPlayer) => {
+            setConnectionIdSecondPlayer(connectionIdEnemyPlayer);
             setCallFight(true);
           })
-          connection.on("StartBattle", (startBattle) => {
-            console.log(startBattle);
+          connection.on("StartBattle", (id) => {
+            navigate ("/multy-battle" ,{state:{battleId: id}});
           })
           connection.on("ReceiveMessage", (message) => {
             const updatedChat = [...latestChat.current];
@@ -95,11 +103,62 @@ const MainPage = () => {
 
   const sendChallenge = async (connectionId) => {
     try {
-      await connection.invoke("ChallengePlayer", userId, connectionId);
-      setConnectionIdSecondPlayer(connectionId);
+      await connection.invoke("ChallengePlayer", connectionId);
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
+    const navigate = useNavigate();
+    useEffect(() => {
+      setShow(show);
+    }, [show]);
+  
+    useEffect(() => {
+      let timeoutId;
+      if (show && canAccept) {
+        timeoutId = setTimeout(() => setShow(false), 10000);
+      } else if (show) {
+        timeoutId = setTimeout(() => setShow(false), 3000);
+      }
+      return () => clearTimeout(timeoutId);
+    }, [show, canAccept]);
+  
+    async function acceptClick() {
+      console.log("eto moy toast");
+      connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
+      
+    }
+    const closeClick = () => {
+      localStorage.setItem("answer", false);
+      setCallFight(false);
+    }
+  
+    return (
+      <div className={show ? "toast show" : "toast"}>
+        <div className='toast_form'>
+          {isOkey === true && <img src={notOkey} className='toast_form_imgNotification' />}
+          {isOkey === false && <img src={okey} className='toast_form_imgNotification' />}
+  
+          {isOkey == "battle" && (
+            <img src={battleNotification} className='toast_form_imgNotification' />
+          )}
+  
+          <div className='toast_form_words'>
+            <p className='toast_form_words_textNotification'>{text}</p>
+            {canAccept && (
+              <div className='toast_form_words_accept'>
+                <p className='toast_form_words_accept_yes'
+                  onClick={acceptClick}>Accept</p>
+                <p className='toast_form_words_accept_no'
+                  onClick={closeClick}>Close</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -120,7 +179,7 @@ const MainPage = () => {
                       <p
                         onClick={() => setHidden(item)}
                         className='mainPage_bottom_chat_messages_users_names_name'>
-                        {item}
+                        {item.userName}
                       </p>
                       <div
                         className={
@@ -129,11 +188,11 @@ const MainPage = () => {
                             : "mainPage_bottom_chat_messages_users_names_hiddenBlock"
                         }>
                         <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                          Информация о {item}
+                          Информация о {item.userName}
                         </p>
                         <p 
                           className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'
-                          onClick={ () => sendChallenge(item)}>
+                          onClick={ () => sendChallenge(item.connectionId)}>
                           Вызвать на бой
                         </p>
                         <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>

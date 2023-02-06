@@ -1,10 +1,14 @@
 import "./ToastComponent.scss";
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import notOkey from "../img/notOkey.svg";
 import okey from "../img/Okey.svg";
 import battleNotification from "../img/battleNotification.png";
+import axiosInstance from "../config/axiosInstance";
+import { API_URL } from "../.env";
 
 const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
+  const navigate = useNavigate();
   useEffect(() => {
     setShow(show);
   }, [show]);
@@ -19,8 +23,14 @@ const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
     return () => clearTimeout(timeoutId);
   }, [show, canAccept]);
 
-  const acceptClick = () => {
-    localStorage.setItem("answer", true)
+  async function acceptClick() {
+    console.log("acceptClick");
+    navigate("/multy-battle")
+    let battle = await axiosInstance.post(`${API_URL}/Battle/create-battle`, {
+      attackPokemon: "B89FBA95-8C1B-413B-D359-08DB07B10A0B",
+      defendingPokemon: "692C9EF3-8483-44DD-AE01-08D80107551D"
+    })
+    
   }
   const closeClick = () => {
     localStorage.setItem("answer", false)

@@ -8,10 +8,12 @@ import BattlePage from "./pages/BattlePage.jsx";
 import Registration from "./pages/Registration.jsx";
 import AppContext from "./context.js";
 import MultyBattlePage from "./pages/MultyBattlePage.jsx";
+
 function App() {
   const [pokedexOpen, setPokedexOpen] = React.useState(false);
   const [wildBattles, setWildBattles] = React.useState(false);
   const [backpackPokemons, setBackpackPokemons] = React.useState(false);
+
   return (
     <AppContext.Provider
       value={{

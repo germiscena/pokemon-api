@@ -19,7 +19,6 @@ const MyPokemons = () => {
   React.useEffect(() => {
     getPokemons();
   }, []);
-  console.log("POKE", pokemons);
   return (
     <div className='myPokemons'>
       <div className='myPokemons_inside'>
