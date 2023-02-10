@@ -10,6 +10,8 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
 import leaveBattle from "../img/leaveBattle.svg";
+import ButtonWithTitle from "../components/ButtonWithTitle";
+import logo from "../img/running_pikachu.gif";
 
 const BattlePage = () => {
   const location = useLocation();
@@ -272,12 +274,11 @@ const BattlePage = () => {
           </div>
           <div className='battle_buttons'>
             <div className='battle_buttons_button' style={{ cursor: "pointer" }}>
-              <img
-                className='battle_buttons_button_image'
-                // onClick={() => restartBattle(turn.length)}
-                src={reload}
-                alt='reload'
-              />
+              <ButtonWithTitle 
+                img={reload}
+                text={"Change Pokemon"}
+                className={"battle_buttons_button_image"}
+                />
             </div>
             <div className='battle_buttons_button'>
               <img className='battle_buttons_button_image' src={backpack} alt='backpack' />
@@ -291,9 +292,12 @@ const BattlePage = () => {
           </div>
         </div>
       ) : (
-        <h1 style={{ width: "100%", textAlign: "center", marginTop: "100px", fontSize: "80px" }}>
-          ЗАГРУЗКА...
-        </h1>
+        <div className='Loading'>
+          <header className='Loading-header'>
+            <img src={logo} className='Loading-logo' alt='logo' />
+            <p className='Loading-text'>BATTLE LOADING . . .</p>
+          </header>
+        </div>
       )}
     </>
   );

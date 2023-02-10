@@ -13,6 +13,7 @@ function App() {
   const [pokedexOpen, setPokedexOpen] = React.useState(false);
   const [wildBattles, setWildBattles] = React.useState(false);
   const [backpackPokemons, setBackpackPokemons] = React.useState(false);
+  const [connectState, setConnectState] = React.useState(null);
 
   return (
     <AppContext.Provider
@@ -23,6 +24,8 @@ function App() {
         setWildBattles,
         backpackPokemons,
         setBackpackPokemons,
+        connectState,
+        setConnectState
       }}>
       <MainComponent>
         <Routes>

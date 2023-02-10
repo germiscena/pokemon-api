@@ -63,7 +63,7 @@ const MainComponent = ({ children }) => {
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login');
+      navigate('/reg');
     }
   }, [navigate]);
   

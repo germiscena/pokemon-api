@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
@@ -11,17 +11,19 @@ import swords from "../img/swords.svg";
 import surrender from "../img/surrender.svg";
 import logo from "../img/running_pikachu.gif";
 import leaveBattle from "../img/leaveBattle.svg";
+import AppContext from "../context";
 
 
 
 const MultyBattlePage = ({}) => {
+  const context = useContext(AppContext);
   const location = useLocation();
-  const [battleId, setBattleId] = useState(location.state)
+  const [battleId, setBattleId] = useState(location.state.battleId);
   const [ battle, setBattle ] = useState({});
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
-
-  const [ connection, setConnection ] = useState(null);
+  
+  const [ connection, setConnection ] = useState(context.connectState);
   const [ myAbilities, setMyAbilities ] = useState({});
   const [ myPokemon, setMyPokemon ] = useState({});
   const [ enemyPokemon, setEnemyPokemon ] = useState({});
@@ -33,22 +35,15 @@ const MultyBattlePage = ({}) => {
   const [round, setRound] = React.useState(1);
   const [turn, setTurn] = React.useState([]);
 
-  const createHubConnection = async () => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/battle`, { accessTokenFactory: () => localStorage.getItem('token') })
-      .build();
-
-    setConnection(newConnection);  
-  };
-
-  useEffect(() => {
-    createHubConnection();
-    getBattleInfo(battleId);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
-
+  useEffect(()=>{
+    setBattleId(location.state.battleId);
+    if(battleId){
+      getBattleInfo(battleId);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  },[location])
   useEffect(() => {
     if(connection){
       connection
@@ -79,7 +74,7 @@ const MultyBattlePage = ({}) => {
 
   async function getBattleInfo(battleState) {
     await axiosInstance
-      .get(`${API_URL}/Battle/get-battle-info?battleId=` + battleState.battleId)
+      .get(`${API_URL}/Battle/get-battle-info?battleId=` + battleId)
         .then((res) => {
           setBattle(res.data);
           setMyPokemon(res.data.attackPokemon);
@@ -90,12 +85,13 @@ const MultyBattlePage = ({}) => {
 
   async function createTurn(abilityId) {
       try{
+        console.log(battleId);
         await axiosInstance
         .post(`${API_URL}/Battle/update-battle`, {
-          battleId: battleId.battleId,
+          battleId: battleId,
           abilityId: abilityId,
         }).then((res) => {
-          connection.invoke("BattleMove", res, battleId.battleId);
+          connection.invoke("BattleMove", res, battleId);
         })
       }
       catch (e) {

@@ -1,5 +1,5 @@
 import "./MainPage.scss";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
 import ChatWindow from "../pages/Chat/ChatWindow";
@@ -11,8 +11,12 @@ import close from "../img/closeChat.svg";
 import notOkey from "../img/notOkey.svg";
 import okey from "../img/Okey.svg";
 import battleNotification from "../img/battleNotification.png";
+import AppContext from "../context";
 
 const MainPage = () => {
+  const context = useContext(AppContext);
+  console.log(context)
+  const [showNotification, setShowNotification] = useState(false);
   const [showHealing, setShowHealing] = useState(false);
   const [okey, setOkey] = useState(true);
   const [connection, setConnection] = useState(null);
@@ -29,7 +33,9 @@ const MainPage = () => {
   const navigate= useNavigate ();
   const latestChat = useRef(null);
   latestChat.current = chat;
-
+  function setConnect(obj){
+    setConnection(obj)
+  }
   async function healingPokemons() {
     let res = await axiosInstance
       .put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem("userId"))
@@ -38,7 +44,6 @@ const MainPage = () => {
   const handleClick = () => {
     healingPokemons();
     setShowHealing(true);
-
   };
   useEffect(() =>{
     if(answer){
@@ -49,7 +54,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/chat`, { accessTokenFactory: () => token })
+      .withUrl(`${API_URL}/pokemonHub`, { accessTokenFactory: () => token })
       .build();
 
     setConnection(newConnection);
@@ -61,11 +66,10 @@ const MainPage = () => {
         .start()
         .then((result) => {
           console.log("Connected!");
-          connection.on("UserExist", () => {
-            console.log("kak by slovyl, no net")
-            navigate("/reg");
-          })
-          connection.invoke("OnConnected", userName, userId);
+          connection.on("UserExist", userName  => {
+            nofificationIfUserRepeat();
+          });
+          connectUser();
           connection.on("AllUsers", (users) => {
             setUsersArray(users);
           });
@@ -74,6 +78,9 @@ const MainPage = () => {
             setCallFight(true);
           })
           connection.on("StartBattle", (id) => {
+            console.log("BACKCONNECTION",connection);
+            context.setConnectState(connection);
+            console.log(context.connectState)
             navigate ("/multy-battle" ,{state:{battleId: id}});
           })
           connection.on("ReceiveMessage", (message) => {
@@ -101,9 +108,23 @@ const MainPage = () => {
     }
   };
 
+  const nofificationIfUserRepeat = () => {
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+      navigate("/reg");
+    }, 5000);
+  };
   const sendChallenge = async (connectionId) => {
     try {
       await connection.invoke("ChallengePlayer", connectionId);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const connectUser = async () => {
+    try {
+      connection.invoke("OnConnected", userName, userId);
     } catch (e) {
       console.log(e);
     }
@@ -255,6 +276,15 @@ const MainPage = () => {
           text={"You are called to fight"}
           isOkey={"battle"}
           canAccept={true}
+        />
+      )}
+      {showNotification && (
+        <ToastComponent ///TODO 
+          setShow={(inf) => setShowNotification(inf)}
+          show={callFight}
+          text={"You use more than two accounts"}
+          isOkey={"battle"}
+          canAccept={false}
         />
       )}
     </div>

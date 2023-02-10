@@ -1,8 +1,6 @@
 import React from "react";
 import AppContext from "../context";
 import "./MyPokemons.scss";
-import heleolisk from "../img/Heleolisk.png";
-import axios from "axios";
 import { API_URL } from "../.env";
 import axiosInstance from "../config/axiosInstance";
 
@@ -37,7 +35,7 @@ const MyPokemons = () => {
                 </p>
                 <div
                   style={{
-                    background: `linear-gradient(to right, #1fe973 ${item.currentHealth}%, transparent 0%)`,
+                    background: `linear-gradient(to right, #1fe973 ${(item.currentHealth / item.maxHealth) * 100}%, transparent 0%)`,
                   }}
                   className='myPokemons_inside_pokemons_single_health'
                 />
