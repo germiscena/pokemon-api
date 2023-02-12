@@ -4,7 +4,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 
 import ChatWindow from "../pages/Chat/ChatWindow";
 import ChatInput from "../pages/Chat/ChatInput";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../config/axiosInstance";
 import { API_URL } from "../.env";
 import close from "../img/closeChat.svg";
@@ -27,18 +27,18 @@ const MainPage = () => {
   let userId = localStorage.getItem("userId");
   const [usersArray, setUsersArray] = useState([]);
   let token = localStorage.getItem("token");
-  const [ answer, setAnswer ] = useState(false);
-  const [ connectionIdSecondPlayer, setConnectionIdSecondPlayer ] = useState("");
-  const navigate= useNavigate ();
+  const [answer, setAnswer] = useState(false);
+  const [connectionIdSecondPlayer, setConnectionIdSecondPlayer] = useState("");
+  const navigate = useNavigate();
   const latestChat = useRef(null);
   latestChat.current = chat;
-  function setConnect(obj){
-    setConnection(obj)
+  function setConnect(obj) {
+    setConnection(obj);
   }
   async function healingPokemons() {
     let res = await axiosInstance
       .put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem("userId"))
-      .then(setUserMoney(res.data));
+      .then((res) => setUserMoney(res.data));
   }
   const handleClick = () => {
     healingPokemons();
@@ -59,7 +59,7 @@ const MainPage = () => {
         .start()
         .then((result) => {
           console.log("Connected!");
-          connection.on("UserExist", userName  => {
+          connection.on("UserExist", (userName) => {
             nofificationIfUserRepeat();
           });
           connection.invoke("OnConnected", userName, userId);
@@ -69,18 +69,17 @@ const MainPage = () => {
           connection.on("Challenge", (connectionIdEnemyPlayer) => {
             setConnectionIdSecondPlayer(connectionIdEnemyPlayer);
             setCallFight(true);
-          })
+          });
           connection.on("StartBattle", (id) => {
             context.setConnectState(connection);
-            navigate ("/multy-battle" ,{state:{battleId: id}});
-          })
+            navigate("/multy-battle", { state: { battleId: id } });
+          });
           connection.on("ReceiveMessage", (message) => {
             const updatedChat = [...latestChat.current];
             updatedChat.push(message);
 
             setChat(updatedChat);
           });
-          
         })
         .catch((e) => console.log("Connection failed: ", e));
     }
@@ -119,7 +118,7 @@ const MainPage = () => {
     useEffect(() => {
       setShow(show);
     }, [show]);
-  
+
     useEffect(() => {
       let timeoutId;
       if (show && canAccept) {
@@ -129,35 +128,36 @@ const MainPage = () => {
       }
       return () => clearTimeout(timeoutId);
     }, [show, canAccept]);
-  
+
     async function acceptClick() {
       console.log(connectionIdSecondPlayer);
       connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
-      
     }
     const closeClick = () => {
       localStorage.setItem("answer", false);
       setCallFight(false);
-    }
-  
+    };
+
     return (
       <div className={show ? "toast show" : "toast"}>
         <div className='toast_form'>
           {isOkey === true && <img src={notOkey} className='toast_form_imgNotification' />}
           {isOkey === false && <img src={okey} className='toast_form_imgNotification' />}
-  
+
           {isOkey == "battle" && (
             <img src={battleNotification} className='toast_form_imgNotification' />
           )}
-  
+
           <div className='toast_form_words'>
             <p className='toast_form_words_textNotification'>{text}</p>
             {canAccept && (
               <div className='toast_form_words_accept'>
-                <p className='toast_form_words_accept_yes'
-                  onClick={acceptClick}>Accept</p>
-                <p className='toast_form_words_accept_no'
-                  onClick={closeClick}>Close</p>
+                <p className='toast_form_words_accept_yes' onClick={acceptClick}>
+                  Accept
+                </p>
+                <p className='toast_form_words_accept_no' onClick={closeClick}>
+                  Close
+                </p>
               </div>
             )}
           </div>
@@ -195,15 +195,29 @@ const MainPage = () => {
                         <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
                           Информация о {item.userName}
                         </p>
-                        <p 
-                          className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'
-                          onClick={ () => sendChallenge(item.connectionId)}>
+                        <p
+                          className={
+                            item.userName == localStorage.getItem("nickName")
+                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                          }
+                          onClick={() => sendChallenge(item.connectionId)}>
                           Вызвать на бой
                         </p>
-                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                        <p
+                          className={
+                            item.userName == localStorage.getItem("nickName")
+                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                          }>
                           Добавить в друзья
                         </p>
-                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
+                        <p
+                          className={
+                            item.userName == localStorage.getItem("nickName")
+                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                          }>
                           Открыть чат
                         </p>
                         <img
@@ -263,7 +277,7 @@ const MainPage = () => {
         />
       )}
       {showNotification && (
-        <ToastComponent ///TODO 
+        <ToastComponent ///TODO
           setShow={(inf) => setShowNotification(inf)}
           show={callFight}
           text={"You use more than two accounts"}

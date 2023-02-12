@@ -17,7 +17,6 @@ import MyPokemons from "./MyPokemons";
 import axiosInstance from "../config/axiosInstance";
 import { API_URL } from "../.env";
 
-
 const MainComponent = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -61,12 +60,12 @@ const MainComponent = ({ children }) => {
   }
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      navigate('/reg');
+      navigate("/reg");
     }
   }, [navigate]);
-  
+
   React.useEffect(() => {
     if (battleAnswer == "accept") {
       getPokemons();
@@ -78,7 +77,10 @@ const MainComponent = ({ children }) => {
       getBattleInfo();
     }
   }, [myPokemons]);
-
+  function logOut() {
+    localStorage.clear();
+    navigate("/reg");
+  }
   return (
     <div className='main'>
       <div className='main_header'>
@@ -95,7 +97,12 @@ const MainComponent = ({ children }) => {
             />
             <img className='main_borders_image' src={inventory} alt='inventory' />
             <img className='main_borders_image' src={friends} alt='players' />
-            <img className='main_borders_image' src={logout} alt='logout' />
+            <img
+              onClick={() => logOut()}
+              className='main_borders_image'
+              src={logout}
+              alt='logout'
+            />
           </div>
           <div className='main_borders right'>
             <Link to='/main'>
