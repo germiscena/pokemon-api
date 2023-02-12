@@ -24,6 +24,7 @@ const MultyBattlePage = ({}) => {
   const navigate = useNavigate();
   
   const [ connection, setConnection ] = useState(context.connectState);
+  console.log(connection);
   const [ myAbilities, setMyAbilities ] = useState({});
   const [ myPokemon, setMyPokemon ] = useState({});
   const [ enemyPokemon, setEnemyPokemon ] = useState({});

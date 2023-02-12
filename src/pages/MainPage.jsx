@@ -15,7 +15,6 @@ import AppContext from "../context";
 
 const MainPage = () => {
   const context = useContext(AppContext);
-  console.log(context)
   const [showNotification, setShowNotification] = useState(false);
   const [showHealing, setShowHealing] = useState(false);
   const [okey, setOkey] = useState(true);
@@ -45,12 +44,6 @@ const MainPage = () => {
     healingPokemons();
     setShowHealing(true);
   };
-  useEffect(() =>{
-    if(answer){
-      console.log("use effect work, but invoke no")
-      connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
-    }
-  }, []);
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -69,7 +62,7 @@ const MainPage = () => {
           connection.on("UserExist", userName  => {
             nofificationIfUserRepeat();
           });
-          connectUser();
+          connection.invoke("OnConnected", userName, userId);
           connection.on("AllUsers", (users) => {
             setUsersArray(users);
           });
@@ -78,9 +71,7 @@ const MainPage = () => {
             setCallFight(true);
           })
           connection.on("StartBattle", (id) => {
-            console.log("BACKCONNECTION",connection);
             context.setConnectState(connection);
-            console.log(context.connectState)
             navigate ("/multy-battle" ,{state:{battleId: id}});
           })
           connection.on("ReceiveMessage", (message) => {
@@ -122,13 +113,6 @@ const MainPage = () => {
       console.log(e);
     }
   };
-  const connectUser = async () => {
-    try {
-      connection.invoke("OnConnected", userName, userId);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
     const navigate = useNavigate();
@@ -147,7 +131,7 @@ const MainPage = () => {
     }, [show, canAccept]);
   
     async function acceptClick() {
-      console.log("eto moy toast");
+      console.log(connectionIdSecondPlayer);
       connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
       
     }
@@ -196,7 +180,7 @@ const MainPage = () => {
               <div className='mainPage_bottom_chat_messages_users_names'>
                 {usersArray.map((item) => {
                   return (
-                    <div key={item}>
+                    <div key={item.connectionId}>
                       <p
                         onClick={() => setHidden(item)}
                         className='mainPage_bottom_chat_messages_users_names_name'>
