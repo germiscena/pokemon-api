@@ -1,90 +1,59 @@
 import "./MainPage.scss";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { ConnectionContext } from "../components/ConnectionProvider.jsx";
+import { API_URL } from "../.env";
+import { useNavigate } from "react-router-dom";
 
 import ChatWindow from "../pages/Chat/ChatWindow";
 import ChatInput from "../pages/Chat/ChatInput";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../config/axiosInstance";
-import { API_URL } from "../.env";
 import close from "../img/closeChat.svg";
 import notOkey from "../img/notOkey.svg";
 import okey from "../img/Okey.svg";
 import battleNotification from "../img/battleNotification.png";
-import AppContext from "../context";
+import Loading from "./Loading";
+import load from "../img/loadingGif.gif";
 
-const MainPage = () => {
-  const context = useContext(AppContext);
-  const [showNotification, setShowNotification] = useState(false);
+const MainPage = ({}) => {
   const [showHealing, setShowHealing] = useState(false);
   const [okey, setOkey] = useState(true);
-  const [connection, setConnection] = useState(null);
-  const [chat, setChat] = useState([]);
   const [userMoney, setUserMoney] = useState(0);
   const [hidden, setHidden] = useState({});
   const [callFight, setCallFight] = React.useState(false);
-  let userName = localStorage.getItem("nickName");
-  let userId = localStorage.getItem("userId");
   const [usersArray, setUsersArray] = useState([]);
-  let token = localStorage.getItem("token");
-  const [answer, setAnswer] = useState(false);
+  const [loadingConnection, setLoadingConnection] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
+  const [chat, setChat] = useState([]);
   const [connectionIdSecondPlayer, setConnectionIdSecondPlayer] = useState("");
+  var userName = localStorage.getItem("nickName");
+  let userId = localStorage.getItem("userId");
+  let token = localStorage.getItem("token");
+  const { connection } = useContext(ConnectionContext);
+  const [queue, setQueue] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadingConnection(false);
+    }, 1000);
+  }, [connection]);
+
   const navigate = useNavigate();
   const latestChat = useRef(null);
+
   latestChat.current = chat;
-  function setConnect(obj) {
-    setConnection(obj);
-  }
+
   async function healingPokemons() {
     let res = await axiosInstance
-      .put(`${API_URL}/Pokemon/healing-user-pokemons?userId=` + localStorage.getItem("userId"))
+      .put(
+        `${API_URL}/Pokemon/healing-user-pokemons?userId=` +
+          localStorage.getItem("userId")
+      )
       .then((res) => setUserMoney(res.data));
   }
   const handleClick = () => {
     healingPokemons();
     setShowHealing(true);
   };
-
-  useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/pokemonHub`, { accessTokenFactory: () => token })
-      .build();
-
-    setConnection(newConnection);
-  }, []);
-
-  useEffect(() => {
-    if (connection) {
-      connection
-        .start()
-        .then((result) => {
-          console.log("Connected!");
-          connection.on("UserExist", (userName) => {
-            nofificationIfUserRepeat();
-          });
-          connection.invoke("OnConnected", userName, userId);
-          connection.on("AllUsers", (users) => {
-            setUsersArray(users);
-          });
-          connection.on("Challenge", (connectionIdEnemyPlayer) => {
-            setConnectionIdSecondPlayer(connectionIdEnemyPlayer);
-            setCallFight(true);
-          });
-          connection.on("StartBattle", (id) => {
-            context.setConnectState(connection);
-            navigate("/multy-battle", { state: { battleId: id } });
-          });
-          connection.on("ReceiveMessage", (message) => {
-            const updatedChat = [...latestChat.current];
-            updatedChat.push(message);
-
-            setChat(updatedChat);
-          });
-        })
-        .catch((e) => console.log("Connection failed: ", e));
-    }
-  }, [connection]);
-
   const sendMessage = async (user, message, time) => {
     const chatMessage = {
       userName: user,
@@ -97,17 +66,45 @@ const MainPage = () => {
       console.log(e);
     }
   };
+  useEffect(() => {
+    if (loadingConnection !== true) {
+      try {
+        if (connection) {
+          connection.invoke("OnConnected", userName, userId);
 
-  const nofificationIfUserRepeat = () => {
-    setShowNotification(true);
-    setTimeout(() => {
-      setShowNotification(false);
-      navigate("/reg");
-    }, 5000);
-  };
+          connection.on("AllUsers", (users) => {
+            setUsersArray(users);
+          });
+
+          connection.on("Challenge", (connectionIdEnemyPlayer) => {
+            setConnectionIdSecondPlayer(connectionIdEnemyPlayer);
+            setCallFight(true);
+          });
+
+          connection.on("ReceiveMessage", (message) => {
+            const updatedChat = [...latestChat.current];
+            updatedChat.push(message);
+
+            setChat(updatedChat);
+          });
+
+          connection.on("StartBattle", (id) => {
+            navigate("/multy-battle", {
+              state: { battleId: id, queue: queue },
+            });
+          });
+        }
+      } catch (e) {
+        console.log("Chtoto ne tak v signalr: ", e);
+      }
+    }
+  }, [loadingConnection]);
+
   const sendChallenge = async (connectionId) => {
     try {
-      await connection.invoke("ChallengePlayer", connectionId);
+      await connection.invoke("ChallengePlayer", connectionId).then(() => {
+        setQueue(true);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -140,22 +137,32 @@ const MainPage = () => {
 
     return (
       <div className={show ? "toast show" : "toast"}>
-        <div className='toast_form'>
-          {isOkey === true && <img src={notOkey} className='toast_form_imgNotification' />}
-          {isOkey === false && <img src={okey} className='toast_form_imgNotification' />}
-
-          {isOkey == "battle" && (
-            <img src={battleNotification} className='toast_form_imgNotification' />
+        <div className="toast_form">
+          {isOkey === true && (
+            <img src={notOkey} className="toast_form_imgNotification" />
+          )}
+          {isOkey === false && (
+            <img src={okey} className="toast_form_imgNotification" />
           )}
 
-          <div className='toast_form_words'>
-            <p className='toast_form_words_textNotification'>{text}</p>
+          {isOkey == "battle" && (
+            <img
+              src={battleNotification}
+              className="toast_form_imgNotification"
+            />
+          )}
+
+          <div className="toast_form_words">
+            <p className="toast_form_words_textNotification">{text}</p>
             {canAccept && (
-              <div className='toast_form_words_accept'>
-                <p className='toast_form_words_accept_yes' onClick={acceptClick}>
+              <div className="toast_form_words_accept">
+                <p
+                  className="toast_form_words_accept_yes"
+                  onClick={acceptClick}
+                >
                   Accept
                 </p>
-                <p className='toast_form_words_accept_no' onClick={closeClick}>
+                <p className="toast_form_words_accept_no" onClick={closeClick}>
                   Close
                 </p>
               </div>
@@ -167,90 +174,104 @@ const MainPage = () => {
   };
 
   return (
-    <div className='mainPage'>
-      <div className='mainPage_landscape' />
-      <div className='mainPage_bottom'>
-        <div className='mainPage_bottom_chat'>
-          <div className='mainPage_bottom_chat_messages'>
-            <div className='mainPage_bottom_chat_messages_chatBlock'>
-              <ChatWindow chat={chat} />
-              <ChatInput sendMessage={sendMessage} />
-            </div>
-            <div className='mainPage_bottom_chat_messages_users'>
-              <div className='mainPage_bottom_chat_messages_users_names'>
-                {usersArray.map((item) => {
-                  return (
-                    <div key={item.connectionId}>
-                      <p
-                        onClick={() => setHidden(item)}
-                        className='mainPage_bottom_chat_messages_users_names_name'>
-                        {item.userName}
-                      </p>
-                      <div
-                        className={
-                          hidden != item
-                            ? "mainPage_bottom_chat_messages_users_names_hiddenBlock hidden"
-                            : "mainPage_bottom_chat_messages_users_names_hiddenBlock"
-                        }>
-                        <p className='mainPage_bottom_chat_messages_users_names_hiddenBlock_text'>
-                          Информация о {item.userName}
-                        </p>
+    <div className="mainPage">
+      <div className="mainPage_landscape" />
+      <div className="mainPage_bottom">
+        {loadingConnection == false ? (
+          <div className="mainPage_bottom_chat">
+            <div className="mainPage_bottom_chat_messages">
+              <div className="mainPage_bottom_chat_messages_chatBlock">
+                <ChatWindow chat={chat} />
+                <ChatInput sendMessage={sendMessage} />
+              </div>
+              <div className="mainPage_bottom_chat_messages_users">
+                <div className="mainPage_bottom_chat_messages_users_names">
+                  {usersArray.map((item) => {
+                    return (
+                      <div key={item.connectionId}>
                         <p
+                          onClick={() => setHidden(item)}
+                          className="mainPage_bottom_chat_messages_users_names_name"
+                        >
+                          {item.userName}
+                        </p>
+                        <div
                           className={
-                            item.userName == localStorage.getItem("nickName")
-                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
-                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                            hidden != item
+                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock hidden"
+                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock"
                           }
-                          onClick={() => sendChallenge(item.connectionId)}>
-                          Вызвать на бой
-                        </p>
-                        <p
-                          className={
-                            item.userName == localStorage.getItem("nickName")
-                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
-                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
-                          }>
-                          Добавить в друзья
-                        </p>
-                        <p
-                          className={
-                            item.userName == localStorage.getItem("nickName")
-                              ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
-                              : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
-                          }>
-                          Открыть чат
-                        </p>
-                        <img
-                          onClick={() => setHidden("")}
-                          src={close}
-                          alt='close'
-                          className='mainPage_bottom_chat_messages_users_names_hiddenBlock_close'
-                        />
+                        >
+                          <p className="mainPage_bottom_chat_messages_users_names_hiddenBlock_text">
+                            Информация о {item.userName}
+                          </p>
+                          <p
+                            className={
+                              item.userName == localStorage.getItem("nickName")
+                                ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                                : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                            }
+                            onClick={() => sendChallenge(item.connectionId)}
+                          >
+                            Вызвать на бой
+                          </p>
+                          <p
+                            className={
+                              item.userName == localStorage.getItem("nickName")
+                                ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                                : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                            }
+                          >
+                            Добавить в друзья
+                          </p>
+                          <p
+                            className={
+                              item.userName == localStorage.getItem("nickName")
+                                ? "mainPage_bottom_chat_messages_users_names_hiddenBlock_text hidden"
+                                : "mainPage_bottom_chat_messages_users_names_hiddenBlock_text"
+                            }
+                          >
+                            Открыть чат
+                          </p>
+                          <img
+                            onClick={() => setHidden("")}
+                            src={close}
+                            alt="close"
+                            className="mainPage_bottom_chat_messages_users_names_hiddenBlock_close"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className='mainPage_bottom_links'>
-          <div className='mainPage_bottom_links_route'>
-            <h3 className='mainPage_bottom_links_route_title'>LOCATION</h3>
-            <div className='mainPage_bottom_links_route_points'>
-              <button className='mainPage_bottom_links_route_points_single'>
+        ) : (
+          <img src={load} />
+        )}
+        <div className="mainPage_bottom_links">
+          <div className="mainPage_bottom_links_route">
+            <h3 className="mainPage_bottom_links_route_title">LOCATION</h3>
+            <div className="mainPage_bottom_links_route_points">
+              <button className="mainPage_bottom_links_route_points_single">
                 Academy of trainers
               </button>
-              <button className='mainPage_bottom_links_route_points_single'>PokeCenter</button>
-              <button className='mainPage_bottom_links_route_points_single'>Wild Forest</button>
+              <button className="mainPage_bottom_links_route_points_single">
+                PokeCenter
+              </button>
+              <button className="mainPage_bottom_links_route_points_single">
+                Wild Forest
+              </button>
             </div>
           </div>
-          <div className='mainPage_bottom_links_route'>
-            <h3 className='mainPage_bottom_links_route_title'>ACTIONS</h3>
-            <div className='mainPage_bottom_links_route_points'>
+          <div className="mainPage_bottom_links_route">
+            <h3 className="mainPage_bottom_links_route_title">ACTIONS</h3>
+            <div className="mainPage_bottom_links_route_points">
               <button
-                className='mainPage_bottom_links_route_points_single'
-                onClick={() => handleClick()}>
+                className="mainPage_bottom_links_route_points_single"
+                onClick={() => handleClick()}
+              >
                 Healing
               </button>
               {showHealing && (
@@ -262,7 +283,9 @@ const MainPage = () => {
                   canAccept={false}
                 />
               )}
-              <button className='mainPage_bottom_links_route_points_single'>Walk</button>
+              <button className="mainPage_bottom_links_route_points_single">
+                Walk
+              </button>
             </div>
           </div>
         </div>

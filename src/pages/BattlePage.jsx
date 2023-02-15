@@ -273,12 +273,8 @@ const BattlePage = () => {
             )}
           </div>
           <div className='battle_buttons'>
-            <div className='battle_buttons_button' style={{ cursor: "pointer" }}>
-              <ButtonWithTitle 
-                img={reload}
-                text={"Change Pokemon"}
-                className={"battle_buttons_button_image"}
-                />
+            <div className='battle_buttons_button' style={{ cursor: "pointer" }}> 
+              <img className='battle_buttons_button_image' src={reload} alt='backpack' />
             </div>
             <div className='battle_buttons_button'>
               <img className='battle_buttons_button_image' src={backpack} alt='backpack' />

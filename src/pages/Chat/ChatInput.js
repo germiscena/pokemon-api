@@ -44,6 +44,7 @@ const ChatInput = (props) => {
     if (isMessageProvided) {
       console.log(userName);
       props.sendMessage(userName, message, time);
+      setMessage("");
     } else {
       alert("Please insert a message.");
     }
@@ -56,18 +57,18 @@ const ChatInput = (props) => {
   return (
     <form onSubmit={onSubmit}>
       <input
-        className='mainPage_bottom_chat_send'
-        placeholder='Сообщение...'
-        type='text'
-        id='message'
-        name='message'
+        className="mainPage_bottom_chat_send"
+        placeholder="Сообщение..."
+        type="text"
+        id="message"
+        name="message"
         value={message}
         onChange={onMessageUpdate}
       />
       <img
         src={sendMessageIcon}
-        alt='send'
-        className='mainPage_bottom_chat_sendImg'
+        alt="send"
+        className="mainPage_bottom_chat_sendImg"
         onClick={() => onSubmit(message)}
       />
     </form>
