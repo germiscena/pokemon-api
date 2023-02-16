@@ -330,37 +330,39 @@ const MultyBattlePage = ({}) => {
               </div>
             ) : (
               myAbilities.map((item) => {
-                {
-                  queue === true ? (
-                    <div
-                      onClick={() => createTurn(item)}
-                      key={item.id}
-                      className="battle_attacks_attack"
-                    >
-                      <img
-                        className="battle_attacks_attack_type"
-                        src={item.imageUrl}
-                        alt={item.name}
-                      />
-                      <div className="battle_attacks_attack_info">
-                        <p className="battle_attacks_attack_info_name">
-                          {item.name}
-                        </p>
-                        <p
-                          style={{
-                            color: "#9b9b9b",
-                            fontSize: "10px",
-                            marginLeft: "2px",
-                          }}
-                        >
-                          35 / 35 РР
-                        </p>
+                return (
+                  <>
+                    {queue == false ? (
+                      <div
+                        onClick={() => createTurn(item)}
+                        key={item.id}
+                        className="battle_attacks_attack"
+                      >
+                        <img
+                          className="battle_attacks_attack_type"
+                          src={item.imageUrl}
+                          alt={item.name}
+                        />
+                        <div className="battle_attacks_attack_info">
+                          <p className="battle_attacks_attack_info_name">
+                            {item.name}
+                          </p>
+                          <p
+                            style={{
+                              color: "#9b9b9b",
+                              fontSize: "10px",
+                              marginLeft: "2px",
+                            }}
+                          >
+                            35 / 35 РР
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <p>time 02:33</p>
-                  );
-                }
+                    ) : (
+                      <p>time 02:33</p>
+                    )}
+                  </>
+                );
               })
             )}
           </div>
