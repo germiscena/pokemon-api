@@ -42,7 +42,6 @@ const ChatInput = (props) => {
     const isMessageProvided = message && message !== "";
 
     if (isMessageProvided) {
-      console.log(userName);
       props.sendMessage(userName, message, time);
       setMessage("");
     } else {

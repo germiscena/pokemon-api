@@ -82,57 +82,58 @@ const MainComponent = ({ children }) => {
     navigate("/reg");
   }
   return (
-    <div className='main'>
-      <div className='main_header'>
-        <p className='main_header_title'>Pokemon World</p>
+    <div className="main">
+      <div className="main_header">
+        <p className="main_header_title">Pokemon World</p>
       </div>
       {location.pathname !== "/reg" && (
         <div>
-          <div className='main_borders left'>
+          <div className="main_borders left">
             <img
-              className='main_borders_image'
+              className="main_borders_image"
               onClick={() => setBackpackPokemons(true)}
               src={pets}
-              alt='pokemons'
+              alt="pokemons"
             />
-            <img className='main_borders_image' src={inventory} alt='inventory' />
-            <img className='main_borders_image' src={friends} alt='players' />
             <img
-              onClick={() => logOut()}
-              className='main_borders_image'
-              src={logout}
-              alt='logout'
+              className="main_borders_image"
+              src={inventory}
+              alt="inventory"
             />
+            <img className="main_borders_image" src={friends} alt="players" />
           </div>
-          <div className='main_borders right'>
-            <Link to='/main'>
+          <div className="main_borders right">
+            <Link to="/main">
               {wildBattles ? (
                 <img
-                  className='main_borders_image'
+                  className="main_borders_image"
                   onClick={() => setWildBattles(!wildBattles)}
                   src={wildOn}
-                  alt='wild pokemons'
+                  alt="wild pokemons"
                 />
               ) : (
                 <img
-                  className='main_borders_image'
+                  className="main_borders_image"
                   onClick={() => setWildBattles(!wildBattles)}
                   src={wild}
-                  alt='wild pokemons'
+                  alt="wild pokemons"
                 />
               )}
             </Link>
             <Link>
               <img
                 onClick={() => setPokedexOpen(true)}
-                className='main_borders_image'
+                className="main_borders_image"
                 src={pokedex}
-                alt='pokedex'
+                alt="pokedex"
               />
             </Link>
-            <Link to='/multy-battle'>
-              <img className='main_borders_image' src={battles} alt='battles' />
-            </Link>
+            <img
+              onClick={() => logOut()}
+              className="main_borders_image"
+              src={logout}
+              alt="logout"
+            />
           </div>
         </div>
       )}
@@ -145,7 +146,9 @@ const MainComponent = ({ children }) => {
         />
       )}
       {pokedexOpen && <Pokedex setClose={() => setPokedexOpen(false)} />}
-      {backpackPokemons && <MyPokemons setClose={() => setBackpackPokemons(false)} />}
+      {backpackPokemons && (
+        <MyPokemons setClose={() => setBackpackPokemons(false)} />
+      )}
     </div>
   );
 };

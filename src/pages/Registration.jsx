@@ -58,7 +58,6 @@ const Registration = () => {
           setRoles(res.data.result.roles);
         });
     } catch (error) {
-      console.log("pizdec");
       console.log(error);
     }
   };
@@ -82,7 +81,6 @@ const Registration = () => {
     }
   }, [userId]);
   async function submitRegistration() {
-    console.log("click");
     try {
       await axios
         .post(`${API_URL}/Auth/register`, {
@@ -107,7 +105,7 @@ const Registration = () => {
       } else if (token.isSuccess) {
         setOkey(true);
         setText(
-          "Ваш аккаунт успешно создан! Вы можете войти в него, нажав на кнопку:'Войти как тренер'.",
+          "Ваш аккаунт успешно создан! Вы можете войти в него, нажав на кнопку:'Войти как тренер'."
         );
         setShow(true);
       }
@@ -149,58 +147,64 @@ const Registration = () => {
   }, [nickName, password]);
 
   return (
-    <div className='reg'>
+    <div className="reg">
       <div className={login || loading ? "reg_info hidden" : "reg_info"}>
-        <p className='reg_info_words'>
-          Pokemon World - это дипломный проект, в виде браузерной игры про покемонов.
+        <p className="reg_info_words">
+          Pokemon World - это дипломный проект, в виде браузерной игры про
+          покемонов.
         </p>
-        <button onClick={() => setLogin(true)} className='reg_info_login'>
+        <button onClick={() => setLogin(true)} className="reg_info_login">
           Войти как тренер
         </button>
-        <img src={pokemon} alt='pokemon' className='reg_info_pokemon' />
+        <img src={pokemon} alt="pokemon" className="reg_info_pokemon" />
       </div>
       <div className={login || loading ? "reg_form hidden" : "reg_form"}>
-        <div className='reg_form_block'>
-          <div className='reg_form_block_input'>
+        <div className="reg_form_block">
+          <div className="reg_form_block_input">
             <label>Имя персонажа</label>
             <input
-              type='text'
+              type="text"
               onChange={() => onChangeRegInput()}
               ref={nameRef}
-              placeholder='Логин'></input>
+              placeholder="Логин"
+            ></input>
           </div>
-          <div className='reg_form_block_input'>
+          <div className="reg_form_block_input">
             <label>Пароль</label>
             <input
-              type='password'
+              type="password"
               onChange={() => onChangeRegInput()}
               ref={passRef}
-              placeholder='Пароль'></input>
+              placeholder="Пароль"
+            ></input>
           </div>
-          <div className='reg_form_block_input'>
+          <div className="reg_form_block_input">
             <label>Пароль ещё раз</label>
             <input
-              type='password'
+              type="password"
               onChange={() => onChangeRegInput()}
               ref={pass2Ref}
-              placeholder='Пароль ещё раз'></input>
+              placeholder="Пароль ещё раз"
+            ></input>
           </div>
-          <div className='reg_form_block_input'>
+          <div className="reg_form_block_input">
             <label>Электронная почта</label>
             <input
-              type='text'
+              type="text"
               onChange={() => onChangeRegInput()}
               ref={mailRef}
-              placeholder='Электронная почта'></input>
+              placeholder="Электронная почта"
+            ></input>
           </div>
-          <div className='reg_form_block_gender'>
+          <div className="reg_form_block_gender">
             <button
               className={
                 newGender === "1"
                   ? "reg_form_block_gender_button boy boyActive"
                   : "reg_form_block_gender_button boy"
               }
-              onClick={() => setNewGender("1")}>
+              onClick={() => setNewGender("1")}
+            >
               Пол мужской
             </button>
             <button
@@ -209,47 +213,63 @@ const Registration = () => {
                   ? "reg_form_block_gender_button girl girlActive"
                   : "reg_form_block_gender_button girl"
               }
-              onClick={() => setNewGender("2")}>
+              onClick={() => setNewGender("2")}
+            >
               Пол женский
             </button>
           </div>
           <button
             onClick={() => submitRegistration()}
-            className={blockButton ? "reg_form_block_register blocked" : "reg_form_block_register"}>
+            className={
+              blockButton
+                ? "reg_form_block_register blocked"
+                : "reg_form_block_register"
+            }
+          >
             Зарегистрироваться
           </button>
         </div>
-        <button onClick={() => navigate("/main")} className='reg_form_skip'>
+        <button onClick={() => navigate("/main")} className="reg_form_skip">
           Пропустить
         </button>
       </div>
       {show && (
-        <ToastComponent setShow={(inf) => setShow(inf)} show={show} text={text} isOkey={okey} />
+        <ToastComponent
+          setShow={(inf) => setShow(inf)}
+          show={show}
+          text={text}
+          isOkey={okey}
+        />
       )}
       {login && (
-        <div className='reg_login'>
-          <button className='reg_login_leave' onClick={() => setLogin(false)}>
+        <div className="reg_login">
+          <button className="reg_login_leave" onClick={() => setLogin(false)}>
             ✖
           </button>
-          <div className='reg_login_input'>
+          <div className="reg_login_input">
             <label>Имя персонажа</label>
             <input
-              type='text'
+              type="text"
               ref={loginName}
-              placeholder='Логин'
-              onChange={() => onChangeLogInput()}></input>
+              placeholder="Логин"
+              onChange={() => onChangeLogInput()}
+            ></input>
           </div>
-          <div className='reg_login_input'>
+          <div className="reg_login_input">
             <label>Пароль</label>
             <input
-              type='password'
+              type="password"
               ref={loginPass}
-              placeholder='Пароль'
-              onChange={() => onChangeLogInput()}></input>
+              placeholder="Пароль"
+              onChange={() => onChangeLogInput()}
+            ></input>
           </div>
           <button
             onClick={() => submitLoggin()}
-            className={loginBlock ? "reg_login_button blocked" : "reg_login_button"}>
+            className={
+              loginBlock ? "reg_login_button blocked" : "reg_login_button"
+            }
+          >
             Войти
           </button>
         </div>

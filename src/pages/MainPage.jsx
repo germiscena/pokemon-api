@@ -90,7 +90,9 @@ const MainPage = ({}) => {
 
           connection.on("StartBattle", (id) => {
             navigate("/multy-battle", {
-              state: { battleId: id, queue: queue },
+              state: {
+                battleId: id,
+              },
             });
           });
         }
@@ -102,12 +104,11 @@ const MainPage = ({}) => {
 
   const sendChallenge = async (connectionId) => {
     try {
-      await connection.invoke("ChallengePlayer", connectionId).then(() => {
-        setQueue(true);
-      });
+      await connection.invoke("ChallengePlayer", connectionId);
     } catch (e) {
       console.log(e);
     }
+    setQueue(true);
   };
 
   const ToastComponent = ({ show, text, isOkey, setShow, canAccept }) => {
@@ -127,7 +128,6 @@ const MainPage = ({}) => {
     }, [show, canAccept]);
 
     async function acceptClick() {
-      console.log(connectionIdSecondPlayer);
       connection.invoke("ConnectPlayers", connectionIdSecondPlayer);
     }
     const closeClick = () => {

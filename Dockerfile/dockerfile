@@ -14,20 +14,3 @@ FROM base AS final
 WORKDIR /usr/share/nginx/html
 COPY --from=build /build/build .
 
-# CMD [ "--default-path", "index.html" ]
-
-# > bash npm start
-
-
-# browser -> myapp.com:80
-# browser <- <html><app></html> (CORS headers)
-# browser -> myapp.com:80/app.js
-# browser -> myapp.com:80/app.css
-
-# browser -> myapp.com:80/api ?
-# 1. separate domain ? CORS api.myapp.com -> restricted
-# 2. proxy to api by /path
-# 3. combined app (asp.net -> routing based response)
-
-# dotnet new react
-
